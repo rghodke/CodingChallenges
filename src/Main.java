@@ -15,14 +15,16 @@ public class Main {
 
     }
 
-    /*
-    You have a binary tree t. Your task is to find the largest value in each row of this tree. In a tree, a row is a
-    set of nodes that have equal depth. For example, a row with depth 0 is a tree root, a row with depth 1 is composed
-    of the root's children, etc.
-    Return an array in which the first element is the largest value in the row with depth 0, the second element is the
-    largest value in the row with depth 1, the third element is the largest element in the row with depth 2, etc.
-     */
 
+    /**
+     *
+     You have a binary tree t. Your task is to find the largest value in each row of this tree. In a tree, a row is a
+     set of nodes that have equal depth. For example, a row with depth 0 is a tree root, a row with depth 1 is composed
+     of the root's children, etc.
+     Return an array in which the first element is the largest value in the row with depth 0, the second element is the
+     largest value in the row with depth 1, the third element is the largest element in the row with depth 2, etc.
+     *
+     */
     class Tree<T>{
         T value;
         Tree<T> left, right;
@@ -63,11 +65,35 @@ public class Main {
             queueSizeAtDepth = queue.size();
         }
 
+        //Copy over list to array
         int[] values = new int[valuesAtDepth.size()];
         int counter = 0;
         for(Integer i : valuesAtDepth) values[counter++] = i;
 
         return values;
+    }
+
+    /**
+     *
+     * You are climbing a staircase that has n steps. You can take the steps either 1 or 2 at a time.
+     * Calculate how many distinct ways you can climb to the top of the staircase.
+     *
+     */
+    int climbingStairs(int n){
+
+        if(n == 1) return 1;
+
+        int[] numberOfWays = new int[n+1];
+
+        numberOfWays[1] = 1;
+        numberOfWays[2] = 2;
+
+        for(int i = 3; i<=n; i++){
+            numberOfWays[i] = numberOfWays[i-1] + numberOfWays[i-2];
+        }
+
+
+        return numberOfWays[n];
     }
 
 }
