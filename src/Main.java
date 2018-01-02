@@ -89,11 +89,39 @@ public class Main {
         numberOfWays[2] = 2;
 
         for(int i = 3; i<=n; i++){
+            //The numberOfWays when one step away plus the numberOfWays when two steps away
             numberOfWays[i] = numberOfWays[i-1] + numberOfWays[i-2];
         }
 
 
         return numberOfWays[n];
+    }
+
+
+    /**
+     * You are planning to rob houses on a specific street, and you know that every house on the street has a certain
+     * amount of money hidden. The only thing stopping you from robbing all of them in one night is that adjacent
+     * houses on the street have a connected security system. The system will automatically trigger an alarm if two
+     * adjacent houses are broken into on the same night.
+     * Given a list of non-negative integers nums representing the amount of money hidden in each house,
+     * determine the maximum amount of money you can rob in one night without triggering an alarm.
+     */
+
+    int houseRobber(int[] nums){
+
+        //Only the first house can be robbed
+        if(nums.length == 1) return nums[0];
+
+        //If there are two houses, rob the one with the most money
+        if(nums.length == 2) return Math.max(nums[0], nums[1]);
+
+        int[][] maxSoFar = new int[nums.length+1][2];
+        for(int i = 1; i<=nums.length; i++){
+            maxSoFar[i][0] = Math.max(maxSoFar[i][0],maxSoFar[i-1][1]); //If you don't rob it
+            maxSoFar[i][1] = nums[i-1] + maxSoFar[i-1][0]; //If you do rob it
+        }
+
+        return Math.max(maxSoFar[nums.length][0], maxSoFar[nums.length][1]);
     }
 
 }
