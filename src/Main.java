@@ -32,72 +32,42 @@ public class Main {
         }
     }
 
-    class TreeNodeWithDepth{
-        Tree<Integer> t;
-        int depth;
-
-        public TreeNodeWithDepth(Tree<Integer> t, int depth){
-            this.t = t;
-            this.depth = depth;
-        }
-    }
-
     private int[] largestValueInTreeRows(Tree<Integer> t) {
         Queue<Tree<Integer>> queue = new ArrayDeque<>();
+        List<Integer> valuesAtDepth = new ArrayList<>();
 
-        List<TreeNodeWithDepth> listOfNodesAtDepth = new ArrayList<>();
-
-        int depth = 0;
-
+        //Add the initial node
         if(t != null){
             queue.add(t);
-            listOfNodesAtDepth.add(new TreeNodeWithDepth(t, depth));
         }
+
+        //Set the number of elements at the 0 depth
+        int queueSizeAtDepth = queue.size();
 
         while(!queue.isEmpty()){
-            Tree<Integer> node = queue.remove();
-            depth++;
-            if(node.left != null){
-                queue.add(node.left);
-                listOfNodesAtDepth.add(new TreeNodeWithDepth(node.left, depth));
+            //Set the curMax to the smallest value by default
+            int curMax = Integer.MIN_VALUE;
+
+            //Go through all the elements at the current depth
+            for(int i = 0; i<queueSizeAtDepth; i++){
+                Tree<Integer> node = queue.remove();
+                curMax = Math.max(curMax, node.value);
+                //Add the children but these elements won't be run in the loop since they are past the queueSizeAtDepth
+                if(node.left != null) queue.add(node.left);
+                if(node.right != null) queue.add(node.right);
             }
-            if(node.right != null){
-                queue.add(node.right);
-                listOfNodesAtDepth.add(new TreeNodeWithDepth(node.right, depth));
-            }
+            //Add the local max
+            valuesAtDepth.add(curMax);
+            //Set the loop for the next iteration to run the number of elements in the queue which should be the
+            //number of elements at the specified depth
+            queueSizeAtDepth = queue.size();
         }
 
-        List<List<Integer>> listOfNodesValues = new ArrayList<>();
+        int[] values = new int[valuesAtDepth.size()];
+        int counter = 0;
+        for(Integer i : valuesAtDepth) values[counter++] = i;
 
-        for(int i = 0; i<depth; i++){
-            List<Integer> tempList = new ArrayList<Integer>();
-            listOfNodesValues.add(tempList);
-        }
-
-        for(TreeNodeWithDepth node : listOfNodesAtDepth){
-            List<Integer> listOfNodesAtNodeDepth = listOfNodesValues.get(node.depth);
-            listOfNodesAtNodeDepth.add(node.t.value);
-            listOfNodesValues.set(node.depth, listOfNodesAtNodeDepth);
-        }
-
-        List<Integer> answer = new ArrayList<>();
-        for(List<Integer> l : listOfNodesValues){
-            int max = l.get(0);
-            for(Integer i : l){
-                max = Math.max(max, i);
-            }
-            answer.add(max);
-        }
-
-        int[] answerArray = new int[answer.size()];
-        int iterator = 0;
-
-        for(Integer i : answer){
-            answerArray[iterator++] = i;
-        }
-
-        return answerArray;
-
+        return values;
     }
 
 }
