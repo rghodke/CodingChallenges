@@ -9,7 +9,7 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-
+        System.out.println(findDigits(1012));
     }
 
 
@@ -332,4 +332,80 @@ public class Main {
     }
 
 
-}
+    /**
+     * Given an integer, , traverse its digits (1,2,...,n) and determine how many digits evenly divide
+     * (i.e.: count the number of times  divided by each digit i has a remainder of ). Print the number of evenly
+     * divisible digits.
+     * Note: Each digit is considered to be unique, so each occurrence of the same evenly divisible digit should be
+     * counted (i.e.: for , the answer is ).
+     */
+    public static int findDigits(int n) {
+        //Using O(n) space
+//        char[] nCopy = String.valueOf(n).toCharArray();
+//        int ans = 0;
+//        for(int i = nCopy.length - 1; i>=0; i--){
+//            int onesPlace = nCopy[i] - '0';
+//            if(onesPlace == 0) continue;
+//            if(n%onesPlace == 0) ans++;
+//        }
+//
+//        return ans;
+        int nCopy = n;
+        int ans = 0;
+        while(nCopy > 0){
+            if(nCopy % 10 == 0) {}
+            else if(n % (nCopy%10) == 0) ans++;
+            nCopy/=10;
+        }
+        return ans;
+    }
+
+    /**
+     * Karl has an array of  integers defined as . In one operation, he can delete any element from the array.
+     Karl wants all the elements of the array to be equal to one another. To do this, he must delete zero or more
+     elements from the array. Find and print the minimum number of deletion operations Karl must perform so that all
+     the array's elements are equal.
+     */
+    static int equalizeArray(int[] arr) {
+        //Get the most common element in the array
+        //Return array.size - count of most common
+        Map<Integer, Integer> arrCounter = new HashMap<>();
+        for(Integer x : arr){
+            if(arrCounter.containsKey(s)) arrCounter.put(x, arrCounter.get(x) + 1);
+            else arrCounter.put(x, 1);
+        }
+
+        int maxValue = 1;
+        for(Integer x:arr){
+            if(arrCounter.get(x) > maxValue) maxValue = Math.max(maxValue, arrCounter.get(x));
+        }
+
+        return arr.length - maxValue;
+    }
+
+    /**
+     * Given a string , find the number of "unordered anagrammatic pairs" of substrings. In other words,
+     * find the number of unordered pairs of substrings of  that are anagrams of each other.
+
+     Two strings are anagrams of each other if the letters of one string can be rearranged to form the other string.
+
+     Input Format
+     First line contains , the number of testcases. Each testcase consists of string  in one line.
+     */
+    static int sherlockAndAnagrams(String s){
+        // Complete this function
+//        Set<char[]> stringSet = new HashSet<>();
+//        int count = 0;
+//        for(int i = 0; i<=s.length(); i++){
+//            for(int j=i; j<=s.length(); j++){
+//                String substring = s.substring(i, j);
+//                char[] subStringArray = substring.toCharArray();
+//                Arrays.sort(subStringArray);
+//                if(stringSet.contains(subStringArray)) count++;
+//                stringSet.add(subStringArray);
+//            }
+//        }
+    }
+
+
+    }
