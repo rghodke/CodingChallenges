@@ -9,7 +9,9 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println(findDigits(1012));
+        int[] a = new int[]{1, 2, 3};
+        int[] b = new int[]{4, 5, 6};
+        NMaxCombinations(a, b, 3, 2);
     }
 
 
@@ -352,32 +354,32 @@ public class Main {
 //        return ans;
         int nCopy = n;
         int ans = 0;
-        while(nCopy > 0){
-            if(nCopy % 10 == 0) {}
-            else if(n % (nCopy%10) == 0) ans++;
-            nCopy/=10;
+        while (nCopy > 0) {
+            if (nCopy % 10 == 0) {
+            } else if (n % (nCopy % 10) == 0) ans++;
+            nCopy /= 10;
         }
         return ans;
     }
 
     /**
      * Karl has an array of  integers defined as . In one operation, he can delete any element from the array.
-     Karl wants all the elements of the array to be equal to one another. To do this, he must delete zero or more
-     elements from the array. Find and print the minimum number of deletion operations Karl must perform so that all
-     the array's elements are equal.
+     * Karl wants all the elements of the array to be equal to one another. To do this, he must delete zero or more
+     * elements from the array. Find and print the minimum number of deletion operations Karl must perform so that all
+     * the array's elements are equal.
      */
     static int equalizeArray(int[] arr) {
         //Get the most common element in the array
         //Return array.size - count of most common
         Map<Integer, Integer> arrCounter = new HashMap<>();
-        for(Integer x : arr){
-            if(arrCounter.containsKey(s)) arrCounter.put(x, arrCounter.get(x) + 1);
+        for (Integer x : arr) {
+            if (arrCounter.containsKey(x)) arrCounter.put(x, arrCounter.get(x) + 1);
             else arrCounter.put(x, 1);
         }
 
         int maxValue = 1;
-        for(Integer x:arr){
-            if(arrCounter.get(x) > maxValue) maxValue = Math.max(maxValue, arrCounter.get(x));
+        for (Integer x : arr) {
+            if (arrCounter.get(x) > maxValue) maxValue = Math.max(maxValue, arrCounter.get(x));
         }
 
         return arr.length - maxValue;
@@ -386,13 +388,13 @@ public class Main {
     /**
      * Given a string , find the number of "unordered anagrammatic pairs" of substrings. In other words,
      * find the number of unordered pairs of substrings of  that are anagrams of each other.
-
-     Two strings are anagrams of each other if the letters of one string can be rearranged to form the other string.
-
-     Input Format
-     First line contains , the number of testcases. Each testcase consists of string  in one line.
+     * <p>
+     * Two strings are anagrams of each other if the letters of one string can be rearranged to form the other string.
+     * <p>
+     * Input Format
+     * First line contains , the number of testcases. Each testcase consists of string  in one line.
      */
-    static int sherlockAndAnagrams(String s){
+    static int sherlockAndAnagrams(String s) {
         // Complete this function
 //        Set<char[]> stringSet = new HashSet<>();
 //        int count = 0;
@@ -405,7 +407,102 @@ public class Main {
 //                stringSet.add(subStringArray);
 //            }
 //        }
+        return -1;
+    }
+
+    /**
+     * Given a list of numbers, can you find the median?
+     */
+    static int findMedian(int[] arr) {
+        //Sort the array then find the middle
+        Arrays.sort(arr);
+        int middle = arr.length / 2;
+        if (arr.length % 2 == 0) {
+            return (arr[middle] + arr[middle - 1]) / 2;
+        } else {
+            return arr[middle];
+        }
+    }
+
+    /**
+     * Given 3 arrays (A, B, C) which are sorted in ascending order, we are required to merge them together in
+     * ascending order and output the array D.
+     */
+    static int[] merge(int[] a, int[] b, int[] c) {
+        int[] d = new int[a.length + b.length + c.length];
+
+        int[] aAndb = new int[a.length + b.length];
+
+        int iterA = 0, iterB = 0, iterC = 0, iterAAndB = 0, iterD = 0;
+
+        while (iterA < a.length && iterB < b.length) {
+            if (a[iterA] < b[iterB]) {
+                aAndb[iterC++] = a[iterA++];
+            } else {
+                aAndb[iterC++] = b[iterB++];
+            }
+        }
+
+        while (iterA < a.length) {
+            aAndb[iterC++] = a[iterA++];
+        }
+
+        while (iterB < b.length) aAndb[iterC++] = b[iterB++];
+
+        iterC = 0;
+
+        while (iterC < c.length && iterAAndB < aAndb.length) {
+            if (c[iterC] < aAndb[iterAAndB]) {
+                d[iterD++] = c[iterC++];
+            } else {
+                d[iterD++] = aAndb[iterAAndB++];
+            }
+        }
+
+        while (iterC < c.length) {
+            d[iterD++] = c[iterC++];
+        }
+
+        while (iterAAndB < aAndb.length) d[iterD++] = aAndb[iterAAndB++];
+
+        return d;
     }
 
 
+    /**
+     * Given two equally sized arrays (A, B) and N (size of both arrays).
+     * A sum combination is made by adding one element from array A and another element of array B.
+     * Display the maximum K valid sum combinations from all the possible sum combinations.
+     */
+    static void NMaxCombinations(int[] A, int[] B, int n, int k) {
+        //Uses O(n) space
+//        PriorityQueue<Integer> minHeap = new PriorityQueue<>((o1, o2) -> Integer.compare(o2, o1)); //compare o2 to o1 because we want the larger on top
+//        for(int i = 0; i<A.length; i++){
+//            for(int j = 0; j<B.length; j++){
+//                minHeap.add(A[i]+B[j]);
+//            }
+//        }
+//        while(k > 0){
+//            System.out.println(minHeap.poll());
+//            k--;
+//        }
+
+        //sort the arrays
+        Arrays.sort(A);
+        Arrays.sort(B);
+        //biggest elements at the end
+        int iterA = A.length - 1, iterB = B.length - 1;
+        System.out.println(A[iterA] + B[iterB]); //the biggest possible sum
+        k--;
+        while (k > 0) {
+            //check which sum is greater and decrement the iterators appropriately
+            if ((A[iterA - 1] + B[iterB]) > (A[iterA] + B[iterB - 1])) {
+                System.out.println((A[iterA-- - 1] + B[iterB]));
+            } else {
+                System.out.println((A[iterA] + B[iterB-- - 1]));
+            }
+            k--;
+        }
+
     }
+}
