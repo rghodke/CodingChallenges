@@ -9,9 +9,6 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        int[] a = new int[]{1, 2, 3};
-        int[] b = new int[]{4, 5, 6};
-        NMaxCombinations(a, b, 3, 2);
     }
 
 
@@ -407,7 +404,51 @@ public class Main {
 //                stringSet.add(subStringArray);
 //            }
 //        }
-        return -1;
+        char[] sArray = s.toCharArray();
+        int count = 0;
+        //Get the different substring pairs
+        for (int i = 1; i < sArray.length; i++) {
+            for (int j = 0; j < sArray.length - i + 1; j++) {
+                String s1 = s.substring(j, i + j);
+                for (int k = j + 1; k < sArray.length - i + 1; k++) {
+                    String s2 = s.substring(k, i + k);
+                    //Check if they are anagrams
+                    if (checkIfAnagram(s1, s2))
+                        count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    static boolean checkIfAnagram(String a, String b) {
+        if (a.length() != b.length()) return false;
+        char[] aArray = a.toCharArray();
+        char[] bArray = b.toCharArray();
+        Map<Character, Integer> aCount = new HashMap<>(), bCount = new HashMap<>();
+        //Add letters and their counts
+        for (int i = 0; i < aArray.length; i++) {
+            if (aCount.containsKey(aArray[i])) aCount.put(aArray[i], aCount.get(aArray[i]) + 1);
+            else {
+                aCount.put(aArray[i], 1);
+            }
+        }
+        for (int i = 0; i < bArray.length; i++) {
+            if (bCount.containsKey(bArray[i])) bCount.put(bArray[i], bCount.get(bArray[i]) + 1);
+            else {
+                bCount.put(bArray[i], 1);
+            }
+        }
+        //Check if same number
+        for (int i = 0; i < bArray.length; i++) {
+            char letter = bArray[i];
+            int bCountOfLetter = bCount.get(letter);
+            if (!aCount.containsKey(letter)) return false;
+            int aCountOfLetter = aCount.get(letter);
+            if (aCountOfLetter != bCountOfLetter) return false;
+        }
+
+        return true;
     }
 
     /**
