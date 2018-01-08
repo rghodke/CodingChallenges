@@ -544,6 +544,71 @@ public class Main {
             }
             k--;
         }
+    }
 
+    /**
+     * Given a string str of size n. The problem is to print all the palindromic permutations of str in
+     * alphabetic order if possible else print “-1”.
+     */
+    public static int printAlphabeticPermutation(String str){
+        TreeSet<String> ansSet = new TreeSet<>();
+        permute(str, 0, str.length() - 1, ansSet);
+        if(ansSet.isEmpty()) return -1;
+        return ansSet.size();
+    }
+
+
+    private static void permute(String str, int i, int j, TreeSet<String> set){
+        if(i == j){
+          if(checkIfPalindrome(str)){
+              set.add(str);
+          }
+        }
+        else{
+            for(int x = i; x<=j; x++){
+                str = swap(str, i, x);
+                permute(str, i+1, j, set);
+                str = swap(str, i, x);
+            }
+        }
+    }
+
+    private static String swap(String str, int i, int j) {
+        char[] strArray = str.toCharArray();
+        char temp = strArray[i];
+        strArray[i] = strArray[j];
+        strArray[j] = temp;
+        return String.valueOf(strArray);
+    }
+
+    private static boolean checkIfPalindrome(String str){
+        //01234 length/2 = 2.5 -> length/2 - 1
+        //0123 //length/2 = 2 -> length/2 - 1
+        char[] strArray = str.toCharArray();
+        for(int i = 0; i<(strArray.length/2); i++){
+            if(strArray[i] != strArray[strArray.length - i - 1]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Given an array of N distinct elements where elements are between 1 and N both inclusive,
+     * check if it is stack-sortable or not. An array A[] is said to be stack sortable if it can be stored in
+     * another array B[], using a temporary stack S.
+
+     The operations that are allowed on array are:
+
+     Remove the starting element of array A[] and push it into the stack.
+     Remove the top element of the stack S and append it to the end of array B.
+     If all the element of A[] can be moved to B[] by performing these operations such that array B is sorted in ascending order, then array A[] is stack sortable.
+     */
+    public static boolean isArrayStackSortable(int[] A){
+        //use a stack to sort A into B
+        //check if the stack.peek is one greater than B, if so then pop
+        //we can only push an element on the stack if the stack is empty or if the element we are going to push
+        // is one greater than the peek on the stack
+        return false;
     }
 }
