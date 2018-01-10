@@ -9,6 +9,7 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
+        System.out.println(setOrUnset(21, 4));
     }
 
 
@@ -611,4 +612,57 @@ public class Main {
         // is one greater than the peek on the stack
         return false;
     }
+
+
+    /**
+     * Given an array of N integers with duplicates allowed. All elements are ranked from 1 to N if they are distinct.
+     * If there are say x repeated elements of a particular value then each element should be assigned a rank equal to
+     * the arithmetic mean of x consecutive ranks.
+     */
+    public static double[] rankTheArray(int[] data){
+        double[] ans = new double[data.length];
+        for(int x = 0; x<data.length; x++){
+            ans[x] = data[x];
+        }
+        Arrays.sort(data); //O(n log n)
+        Map<Integer, List<Integer>> idxMap = new HashMap<>();
+        for(int i = 0; i<data.length; i++){
+            List<Integer> idxList = new ArrayList<>();
+            idxMap.putIfAbsent(data[i], idxList);
+            idxList = idxMap.get(data[i]);
+            idxList.add(i+1);
+            idxMap.put(data[i], idxList);
+        }
+        for(int i = 0; i<ans.length; i++){
+            ans[i] = averageOfList(idxMap.get((int)(ans[i])));
+        }
+        return ans;
+    }
+
+    private static double averageOfList(List<Integer> data){
+        double sum = 0;
+        for(int x : data){
+            sum += x;
+        }
+        return sum/data.size();
+    }
+
+    /**
+     * Given two positive integers n and k. The problem is to check whether the bit at position k from the
+     * right in the binary representation of n is set (‘1’) or unset (‘0’).
+     Constraints: 1 <= k <= number of bits in the binary representation of n.
+     */
+    public static String setOrUnset(int n, int k){
+        /*
+        String x = Integer.toBinaryString(n);
+        int pos = x.length() - k;
+        if(x.charAt(pos) == '1') return "set";
+        else return "unset";
+        */
+        n = n >> (k-1);
+        if((n & 1) == 1) return "set" ;
+        else return "unset";
+    }
+
+
 }
