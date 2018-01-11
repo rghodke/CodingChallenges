@@ -9,7 +9,6 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println(setOrUnset(21, 4));
     }
 
 
@@ -664,5 +663,177 @@ public class Main {
         else return "unset";
     }
 
+    /**
+     * Given n non-negative integers a_1, a_2, ..., a_n  where each represents a point at coordinate  (i, a_i) . ‘ n ‘
+     * vertical lines are drawn such that the two endpoints of line i is at  (i, a_i)  and (i, 0).
+     Find two lines, which together with x-axis forms a container, such that the container contains the most water.
 
+     The program should return an integer which corresponds to the maximum area of water that can be contained
+     ( maximum area instead of maximum volume sounds weird but this is 2D plane we are working with for simplicity ).
+     */
+
+    public static class ContainerObject{
+        int length;
+        int width;
+        int area;
+        ContainerObject(int length, int width){
+            this.length = length;
+            this.width = width;
+            this.area = this.length * this.width;
+        }
+    }
+
+    public static int areaOfWater(int[] xCoor){
+        /*
+        //Find the max distance multiplied with the max heights to create the biggest container
+        List<ContainerObject> containerObjectList = new ArrayList<>();
+        for(int i = 0; i<xCoor.length; i++){
+            for(int j = i; j<xCoor.length; j++){
+                int line1 = xCoor[i];
+                int line2 = xCoor[j];
+                //Use min and not max because the walls of the water are limited by the height of the smaller line
+                containerObjectList.add(new ContainerObject(Math.min(line1, line2), j-i));
+            }
+        }
+
+        Collections.sort(containerObjectList, new Comparator<ContainerObject>() {
+            @Override
+            public int compare(ContainerObject o1, ContainerObject o2) {
+                return Integer.compare(o2.area, o1.area);
+            }
+        });
+
+        return containerObjectList.get(0).area;
+        */
+        int left = 0;
+        int right = xCoor.length - 1;
+        int area = 0;
+        while(left < right){
+            area = Math.max(area, Math.min(xCoor[left], xCoor[right])*(right-left));
+        }
+        //We move the left ptr if the value at the left ptr is less than that of the right
+        //To maximize the left value
+        if(xCoor[left] < xCoor[right]){
+            left++;
+        }else if(xCoor[right] <= xCoor[left]){ //if right value <= left value to maximize the right value
+            right--;
+        }
+        return area;
+    }
+
+    /**
+     * Given n boxes containing some chocolates arranged in a row. There are k number of students. The problem is
+     * to distribute maximum number of chocolates equally among k students by selecting a consecutive sequence of
+     * boxes from the given lot. Consider the boxes are arranged in a row with numbers from 1 to n from left to right.
+     * We have to select a group of boxes which are in consecutive order that could provide maximum number of
+     * chocolates equally to all the k students. An array arr[] is given representing the row arrangement of the
+     * boxes and arr[i] represents number of chocolates in that box at position ‘i’.
+     */
+    public static int maxNumOfChocolates(int arr[], int n, int k){
+//        int sum = 0;
+//
+//        for(int i = 0; i<n; i++){
+//            for(int j = 0; j < n; j++){
+//                int tempSum = sum(arr, i, j);
+//                if(tempSum % k == 0){
+//                    sum = Math.max(sum, tempSum);
+//                }
+//            }
+//        }
+
+        Map<Integer, Integer> remainders = new HashMap<>();
+
+        int[] sums = new int[n];
+        sums[0] = arr[0];
+        for(int i = 1; i<arr.length; i++){
+            sums[i] = sums[i-1] + arr[i];
+        }
+
+
+        int maxNum = 0;
+        for(int i = 0; i<sums.length; i++){
+            System.out.println(sums[i]);
+            if(sums[i] % k == 0){
+                maxNum = Math.max(maxNum, sums[i]);
+            }else if(!remainders.containsKey(sums[i] % k)){
+                    remainders.put((sums[i] % k), i);
+            }else{
+                //sums[remainders.get[sums[i] % k ] will be at the ends of the subArray because the elements
+                //are added in the above for loop
+                if(maxNum < (sums[i] - sums[remainders.get(sums[i] % k)])){
+                    maxNum = sums[i] - sums[remainders.get(sums[i] % k)];
+                }
+            }
+
+            }
+
+        return maxNum/k;
+    }
+
+    public static int sum(int data[], int i, int j){
+        int sum = 0;
+        while(i < j){
+            sum += data[i++];
+        }
+        return sum;
+    }
+
+    /**
+     * Given an array of n positive elements, find the maximum AND value and the pair of elements generating
+     * the maximum AND value from the array AND is bitwise & operator.
+     */
+    public static int maxANDValue(int[] data){
+        int max = 0;
+        for(int i = 0; i<data.length; i++){
+            for(int j = i+1; j<data.length; j++) {
+                max = Math.max(max, data[i] & data[j]);
+            }
+        }
+        return max;
+    }
+
+    /**
+     * You are given two string str1 and str2 of same length. In a single shift you can rotate one string (str2)
+     * by 1 element such that its 1st element becomes the last and second one becomes the first like “abcd” will
+     * change to “bcda” after one shift operation. You have to find the minimum shift operation required to get
+     * common prefix of maximum length from str1 and str2.
+     */
+    public static String minimumShiftOperation(String s1, String s2){
+        /*
+        O(n^2)
+         */
+//        int prefixLength = 0;
+//        for(int i = 0; i<s2.length(); i++){
+//            int rotatedPrefixLength = 0;
+//            s2 = rotateString(s2);
+//            for(int j = 0; j<s2.length(); j++){
+//                if(s1.charAt(j) == s2.charAt(j)){
+//                    rotatedPrefixLength++;
+//                }
+//            }
+//            prefixLength = Math.max(rotatedPrefixLength, prefixLength);
+//        }
+//        return s1.substring(0, prefixLength);
+
+        return null;
+
+        //Rather than rotate a string multiple times, you can append it to itself and look for the s1 pattern in s2
+        // instead. Once we have the indexOf the prefix, we can calculate the shifts required
+
+        //runKMPSearch(s1, s2+s2);
+    }
+
+    private static String rotateString(String s2) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(s2.charAt(s2.length()-1));
+        sb.append(s2.substring(0, s2.length()-1));
+        return sb.toString();
+    }
+
+    /**
+     * KMP Algorithm
+     */
+    public static int KMPAlgo(String s1, String s2){
+        return -1;
+    }
 }
