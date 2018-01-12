@@ -550,24 +550,23 @@ public class Main {
      * Given a string str of size n. The problem is to print all the palindromic permutations of str in
      * alphabetic order if possible else print “-1”.
      */
-    public static int printAlphabeticPermutation(String str){
+    public static int printAlphabeticPermutation(String str) {
         TreeSet<String> ansSet = new TreeSet<>();
         permute(str, 0, str.length() - 1, ansSet);
-        if(ansSet.isEmpty()) return -1;
+        if (ansSet.isEmpty()) return -1;
         return ansSet.size();
     }
 
 
-    private static void permute(String str, int i, int j, TreeSet<String> set){
-        if(i == j){
-          if(checkIfPalindrome(str)){
-              set.add(str);
-          }
-        }
-        else{
-            for(int x = i; x<=j; x++){
+    private static void permute(String str, int i, int j, TreeSet<String> set) {
+        if (i == j) {
+            if (checkIfPalindrome(str)) {
+                set.add(str);
+            }
+        } else {
+            for (int x = i; x <= j; x++) {
                 str = swap(str, i, x);
-                permute(str, i+1, j, set);
+                permute(str, i + 1, j, set);
                 str = swap(str, i, x);
             }
         }
@@ -581,12 +580,12 @@ public class Main {
         return String.valueOf(strArray);
     }
 
-    private static boolean checkIfPalindrome(String str){
+    private static boolean checkIfPalindrome(String str) {
         //01234 length/2 = 2.5 -> length/2 - 1
         //0123 //length/2 = 2 -> length/2 - 1
         char[] strArray = str.toCharArray();
-        for(int i = 0; i<(strArray.length/2); i++){
-            if(strArray[i] != strArray[strArray.length - i - 1]){
+        for (int i = 0; i < (strArray.length / 2); i++) {
+            if (strArray[i] != strArray[strArray.length - i - 1]) {
                 return false;
             }
         }
@@ -597,14 +596,14 @@ public class Main {
      * Given an array of N distinct elements where elements are between 1 and N both inclusive,
      * check if it is stack-sortable or not. An array A[] is said to be stack sortable if it can be stored in
      * another array B[], using a temporary stack S.
-
-     The operations that are allowed on array are:
-
-     Remove the starting element of array A[] and push it into the stack.
-     Remove the top element of the stack S and append it to the end of array B.
-     If all the element of A[] can be moved to B[] by performing these operations such that array B is sorted in ascending order, then array A[] is stack sortable.
+     * <p>
+     * The operations that are allowed on array are:
+     * <p>
+     * Remove the starting element of array A[] and push it into the stack.
+     * Remove the top element of the stack S and append it to the end of array B.
+     * If all the element of A[] can be moved to B[] by performing these operations such that array B is sorted in ascending order, then array A[] is stack sortable.
      */
-    public static boolean isArrayStackSortable(int[] A){
+    public static boolean isArrayStackSortable(int[] A) {
         //use a stack to sort A into B
         //check if the stack.peek is one greater than B, if so then pop
         //we can only push an element on the stack if the stack is empty or if the element we are going to push
@@ -618,72 +617,73 @@ public class Main {
      * If there are say x repeated elements of a particular value then each element should be assigned a rank equal to
      * the arithmetic mean of x consecutive ranks.
      */
-    public static double[] rankTheArray(int[] data){
+    public static double[] rankTheArray(int[] data) {
         double[] ans = new double[data.length];
-        for(int x = 0; x<data.length; x++){
+        for (int x = 0; x < data.length; x++) {
             ans[x] = data[x];
         }
         Arrays.sort(data); //O(n log n)
         Map<Integer, List<Integer>> idxMap = new HashMap<>();
-        for(int i = 0; i<data.length; i++){
+        for (int i = 0; i < data.length; i++) {
             List<Integer> idxList = new ArrayList<>();
             idxMap.putIfAbsent(data[i], idxList);
             idxList = idxMap.get(data[i]);
-            idxList.add(i+1);
+            idxList.add(i + 1);
             idxMap.put(data[i], idxList);
         }
-        for(int i = 0; i<ans.length; i++){
-            ans[i] = averageOfList(idxMap.get((int)(ans[i])));
+        for (int i = 0; i < ans.length; i++) {
+            ans[i] = averageOfList(idxMap.get((int) (ans[i])));
         }
         return ans;
     }
 
-    private static double averageOfList(List<Integer> data){
+    private static double averageOfList(List<Integer> data) {
         double sum = 0;
-        for(int x : data){
+        for (int x : data) {
             sum += x;
         }
-        return sum/data.size();
+        return sum / data.size();
     }
 
     /**
      * Given two positive integers n and k. The problem is to check whether the bit at position k from the
      * right in the binary representation of n is set (‘1’) or unset (‘0’).
-     Constraints: 1 <= k <= number of bits in the binary representation of n.
+     * Constraints: 1 <= k <= number of bits in the binary representation of n.
      */
-    public static String setOrUnset(int n, int k){
+    public static String setOrUnset(int n, int k) {
         /*
         String x = Integer.toBinaryString(n);
         int pos = x.length() - k;
         if(x.charAt(pos) == '1') return "set";
         else return "unset";
         */
-        n = n >> (k-1);
-        if((n & 1) == 1) return "set" ;
+        n = n >> (k - 1);
+        if ((n & 1) == 1) return "set";
         else return "unset";
     }
 
     /**
      * Given n non-negative integers a_1, a_2, ..., a_n  where each represents a point at coordinate  (i, a_i) . ‘ n ‘
      * vertical lines are drawn such that the two endpoints of line i is at  (i, a_i)  and (i, 0).
-     Find two lines, which together with x-axis forms a container, such that the container contains the most water.
-
-     The program should return an integer which corresponds to the maximum area of water that can be contained
-     ( maximum area instead of maximum volume sounds weird but this is 2D plane we are working with for simplicity ).
+     * Find two lines, which together with x-axis forms a container, such that the container contains the most water.
+     * <p>
+     * The program should return an integer which corresponds to the maximum area of water that can be contained
+     * ( maximum area instead of maximum volume sounds weird but this is 2D plane we are working with for simplicity ).
      */
 
-    public static class ContainerObject{
+    public static class ContainerObject {
         int length;
         int width;
         int area;
-        ContainerObject(int length, int width){
+
+        ContainerObject(int length, int width) {
             this.length = length;
             this.width = width;
             this.area = this.length * this.width;
         }
     }
 
-    public static int areaOfWater(int[] xCoor){
+    public static int areaOfWater(int[] xCoor) {
         /*
         //Find the max distance multiplied with the max heights to create the biggest container
         List<ContainerObject> containerObjectList = new ArrayList<>();
@@ -708,14 +708,14 @@ public class Main {
         int left = 0;
         int right = xCoor.length - 1;
         int area = 0;
-        while(left < right){
-            area = Math.max(area, Math.min(xCoor[left], xCoor[right])*(right-left));
+        while (left < right) {
+            area = Math.max(area, Math.min(xCoor[left], xCoor[right]) * (right - left));
         }
         //We move the left ptr if the value at the left ptr is less than that of the right
         //To maximize the left value
-        if(xCoor[left] < xCoor[right]){
+        if (xCoor[left] < xCoor[right]) {
             left++;
-        }else if(xCoor[right] <= xCoor[left]){ //if right value <= left value to maximize the right value
+        } else if (xCoor[right] <= xCoor[left]) { //if right value <= left value to maximize the right value
             right--;
         }
         return area;
@@ -729,7 +729,7 @@ public class Main {
      * chocolates equally to all the k students. An array arr[] is given representing the row arrangement of the
      * boxes and arr[i] represents number of chocolates in that box at position ‘i’.
      */
-    public static int maxNumOfChocolates(int arr[], int n, int k){
+    public static int maxNumOfChocolates(int arr[], int n, int k) {
 //        int sum = 0;
 //
 //        for(int i = 0; i<n; i++){
@@ -745,34 +745,34 @@ public class Main {
 
         int[] sums = new int[n];
         sums[0] = arr[0];
-        for(int i = 1; i<arr.length; i++){
-            sums[i] = sums[i-1] + arr[i];
+        for (int i = 1; i < arr.length; i++) {
+            sums[i] = sums[i - 1] + arr[i];
         }
 
 
         int maxNum = 0;
-        for(int i = 0; i<sums.length; i++){
+        for (int i = 0; i < sums.length; i++) {
             System.out.println(sums[i]);
-            if(sums[i] % k == 0){
+            if (sums[i] % k == 0) {
                 maxNum = Math.max(maxNum, sums[i]);
-            }else if(!remainders.containsKey(sums[i] % k)){
-                    remainders.put((sums[i] % k), i);
-            }else{
+            } else if (!remainders.containsKey(sums[i] % k)) {
+                remainders.put((sums[i] % k), i);
+            } else {
                 //sums[remainders.get[sums[i] % k ] will be at the ends of the subArray because the elements
                 //are added in the above for loop
-                if(maxNum < (sums[i] - sums[remainders.get(sums[i] % k)])){
+                if (maxNum < (sums[i] - sums[remainders.get(sums[i] % k)])) {
                     maxNum = sums[i] - sums[remainders.get(sums[i] % k)];
                 }
             }
 
-            }
+        }
 
-        return maxNum/k;
+        return maxNum / k;
     }
 
-    public static int sum(int data[], int i, int j){
+    public static int sum(int data[], int i, int j) {
         int sum = 0;
-        while(i < j){
+        while (i < j) {
             sum += data[i++];
         }
         return sum;
@@ -782,10 +782,10 @@ public class Main {
      * Given an array of n positive elements, find the maximum AND value and the pair of elements generating
      * the maximum AND value from the array AND is bitwise & operator.
      */
-    public static int maxANDValue(int[] data){
+    public static int maxANDValue(int[] data) {
         int max = 0;
-        for(int i = 0; i<data.length; i++){
-            for(int j = i+1; j<data.length; j++) {
+        for (int i = 0; i < data.length; i++) {
+            for (int j = i + 1; j < data.length; j++) {
                 max = Math.max(max, data[i] & data[j]);
             }
         }
@@ -798,7 +798,7 @@ public class Main {
      * change to “bcda” after one shift operation. You have to find the minimum shift operation required to get
      * common prefix of maximum length from str1 and str2.
      */
-    public static String minimumShiftOperation(String s1, String s2){
+    public static String minimumShiftOperation(String s1, String s2) {
         /*
         O(n^2)
          */
@@ -815,25 +815,171 @@ public class Main {
 //        }
 //        return s1.substring(0, prefixLength);
 
-        return null;
 
         //Rather than rotate a string multiple times, you can append it to itself and look for the s1 pattern in s2
         // instead. Once we have the indexOf the prefix, we can calculate the shifts required
 
         //runKMPSearch(s1, s2+s2);
+        //O(n)
+        return KMPAlgo(s2 + s2, s1);
     }
 
     private static String rotateString(String s2) {
         StringBuilder sb = new StringBuilder();
-        sb.append(s2.charAt(s2.length()-1));
-        sb.append(s2.substring(0, s2.length()-1));
+        sb.append(s2.charAt(s2.length() - 1));
+        sb.append(s2.substring(0, s2.length() - 1));
         return sb.toString();
     }
 
     /**
      * KMP Algorithm
      */
-    public static int KMPAlgo(String s1, String s2){
-        return -1;
+    public static String KMPAlgo(String s1, String s2) {
+
+        int pos = 0, len = 0;
+
+        //preprocessing
+        int[] p = new int[s1.length() + 1];
+        int k = 0;
+        p[1] = 0;
+
+        for (int i = 2; i <= s2.length(); i++) {
+            while (k > 0 && s1.charAt(k) != s1.charAt(i - 1)) k = p[k];
+            if (s1.charAt(k) == s1.charAt(i - 1)) k++;
+            p[i] = k;
+        }
+
+        //find longest prefix
+        for (int j = 0, i = 0; i < s1.length(); i++) {
+            while (j > 0 && s1.charAt(j) != s2.charAt(i)) j = p[j];
+            if (s1.charAt(j) == s2.charAt(i)) j++;
+
+            //for new pos with longer prefix in s2
+            if (j > len) {
+                len = j;
+                pos = i - j + 1;
+            }
+        }
+
+        return s1.substring(0, len);
     }
+
+    /**
+     * Given a positive number N. We need to find number(s) such that sum of digits of those numbers to themselves
+     * is equal to N. If no such number is possible print -1.
+     */
+    public static Set<Integer> findNumDigit(int n) {
+        long valueOfLeft, valueOfEight;
+        Set<Integer> ans = new HashSet<>();
+        for (int i = 0; i <= 100; i++) {
+            valueOfLeft = Math.abs(n - i) + sumOfDigits(Math.abs(n - i));
+            valueOfEight = n + i + sumOfDigits(n + i);
+
+            if (valueOfEight == n) {
+                ans.add(n + i);
+            }
+            if (valueOfLeft == n) {
+                ans.add(Math.abs(n - i));
+            }
+        }
+        return ans;
+    }
+
+    private static int sumOfDigits(int k) {
+        int sum = 0;
+        while (k > 0) {
+            sum += k % 10;
+            k /= 10;
+        }
+        return sum;
+    }
+
+    /**
+     * Implement an algo to check if string has all unique character
+     */
+    public static boolean allUnique(String str1) {
+
+        Set<Character> strChar = new HashSet<>();
+        for (int i = 0; i < str1.length(); i++) {
+            if (strChar.contains(str1.charAt(i))) return false;
+            else {
+                strChar.add(str1.charAt(i));
+            }
+        }
+        return true;
+        //If no additional DS, you can sort or you can do two for loops
+    }
+
+    /**
+     *  Given two strings, write a method to decide if one is a permutation of the other.
+     */
+    public static boolean isPermutation(String s1, String s2){
+        char[] s1Array = s1.toCharArray();
+        char[] s2Array = s2.toCharArray();
+        Arrays.sort(s1Array);
+        Arrays.sort(s2Array);
+        return (Arrays.compare(s1Array, s2Array) == 0);
+        //Sort the two strings, check if =
+        //Count the # of chars and see if they are equal size and number of occurances
+    }
+
+    /**
+     * Write a method to replace all spaces in a string with '%20'. You may assume that the string has sufficient
+     * space at the end to hold the additional characters, and that you are given the "true" length of the string.
+     * (Note: If implementing in Java, please use a character array so that you can perform this operation in place.)
+     */
+    public static String replaceSpaceWith20(char[] s1){
+        String string = new String(s1);
+        string = string.replaceAll(" ", "%20");
+        return string;
+
+//        StringBuilder sb = new StringBuilder();
+//        for(Character c : s1){
+//            if(c == ' '){
+//                sb.append("%20");
+//            }else{
+//                sb.append(c);
+//            }
+//        }
+//        return sb.toString();
+    }
+
+    /**
+     * Given a string, write a function to check if it is a permutation of a palindrome. A palindrome is a word or
+     * phrase that is the same forwards and backwards. A permutation is a rearrangement of letters. The palindrome
+     * does not need to be limited to just dictionary words.
+     */
+    public static boolean isPermutationOfPalindrome(String s1){
+        //Get count of all unique chars
+        //If odd length, it should have only 1 odd count and the rest are even
+        //If its even length, it should have only even counts
+        s1 = s1.toLowerCase();
+        Map<Character, Integer> charCount = new HashMap<>();
+        int countWithoutSpace = 0;
+        for (int i = 0; i < s1.length(); i++){
+            if(s1.charAt(i) == ' ') continue;
+            charCount.putIfAbsent(s1.charAt(i), 0);
+            charCount.put(s1.charAt(i), charCount.get(s1.charAt(i)) + 1);
+            countWithoutSpace++;
+        }
+
+        boolean oddLength = false;
+
+        if(countWithoutSpace % 2 == 1) oddLength = true;
+
+        for(int i = 0; i<s1.length(); i++){
+            if(s1.charAt(i) == ' ') continue;
+            int count = charCount.get(s1.charAt(i));
+            System.out.println("s1.charAt(i) " + s1.charAt(i) + "count " + count);
+            if(count % 2 == 1){
+                if(oddLength){
+                    oddLength = false;
+                }else if(!oddLength){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 }
