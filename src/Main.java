@@ -9,6 +9,7 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
+
     }
 
 
@@ -911,9 +912,9 @@ public class Main {
     }
 
     /**
-     *  Given two strings, write a method to decide if one is a permutation of the other.
+     * Given two strings, write a method to decide if one is a permutation of the other.
      */
-    public static boolean isPermutation(String s1, String s2){
+    public static boolean isPermutation(String s1, String s2) {
         char[] s1Array = s1.toCharArray();
         char[] s2Array = s2.toCharArray();
         Arrays.sort(s1Array);
@@ -928,7 +929,7 @@ public class Main {
      * space at the end to hold the additional characters, and that you are given the "true" length of the string.
      * (Note: If implementing in Java, please use a character array so that you can perform this operation in place.)
      */
-    public static String replaceSpaceWith20(char[] s1){
+    public static String replaceSpaceWith20(char[] s1) {
         String string = new String(s1);
         string = string.replaceAll(" ", "%20");
         return string;
@@ -949,15 +950,15 @@ public class Main {
      * phrase that is the same forwards and backwards. A permutation is a rearrangement of letters. The palindrome
      * does not need to be limited to just dictionary words.
      */
-    public static boolean isPermutationOfPalindrome(String s1){
+    public static boolean isPermutationOfPalindrome(String s1) {
         //Get count of all unique chars
         //If odd length, it should have only 1 odd count and the rest are even
         //If its even length, it should have only even counts
         s1 = s1.toLowerCase();
         Map<Character, Integer> charCount = new HashMap<>();
         int countWithoutSpace = 0;
-        for (int i = 0; i < s1.length(); i++){
-            if(s1.charAt(i) == ' ') continue;
+        for (int i = 0; i < s1.length(); i++) {
+            if (s1.charAt(i) == ' ') continue;
             charCount.putIfAbsent(s1.charAt(i), 0);
             charCount.put(s1.charAt(i), charCount.get(s1.charAt(i)) + 1);
             countWithoutSpace++;
@@ -965,21 +966,210 @@ public class Main {
 
         boolean oddLength = false;
 
-        if(countWithoutSpace % 2 == 1) oddLength = true;
+        if (countWithoutSpace % 2 == 1) oddLength = true;
 
-        for(int i = 0; i<s1.length(); i++){
-            if(s1.charAt(i) == ' ') continue;
+        for (int i = 0; i < s1.length(); i++) {
+            if (s1.charAt(i) == ' ') continue;
             int count = charCount.get(s1.charAt(i));
             System.out.println("s1.charAt(i) " + s1.charAt(i) + "count " + count);
-            if(count % 2 == 1){
-                if(oddLength){
+            if (count % 2 == 1) {
+                if (oddLength) {
                     oddLength = false;
-                }else if(!oddLength){
+                } else if (!oddLength) {
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    /**
+     * There are three types of edits that can be performed on strings: insert a character, remove a character,
+     * or replace a character. Given two strings, write a function to check if they are one edit (or zero edits) away.
+     *
+     * @param s1
+     * @param s2
+     * @return
+     */
+    public static boolean isOneAway(String s1, String s2) {
+        //Check if s1 and s2 have the same character except for one character
+
+//        boolean isOneEditCheck = false;
+//
+//        String shorterString = s1.length() < s2.length() ? s1 : s2;
+//        String longerString = s1.length() < s2.length() ? s2 : s1;
+//
+//        for(int i = 0; i<shorterString.length(); i++){
+//            if(longerString.indexOf(shorterString.charAt(i)) == -1){
+//                if(!isOneEditCheck) isOneEditCheck = true;
+//                else if(isOneEditCheck) return false;
+//            }else{
+//                longerString = longerString.replace(""+shorterString.charAt(i), "");
+//            }
+//        }
+//
+//        if(isOneEditCheck && longerString.length() == 1) return true;
+//        else if(isOneEditCheck && longerString.length() > 1){
+//            return false;
+//        }
+//        return true;
+
+        String shorterString = s1.length() < s2.length() ? s1 : s2;
+        String longerString = s1.length() < s2.length() ? s2 : s1;
+
+        boolean isOneAwayCheck = false;
+        int s1Iterator = 0;
+        int s2Iterator = 0;
+
+        while (s1Iterator < shorterString.length() && s2Iterator < longerString.length()) {
+            if(shorterString.charAt(s1Iterator) != longerString.charAt(s2Iterator)){
+                if(isOneAwayCheck) return false;
+                if(!isOneAwayCheck) isOneAwayCheck = true;
+                if(shorterString.length() == longerString.length()) s1Iterator++;
+            }else{
+                s1Iterator++;
+            }
+            s2Iterator++;
+        }
+        return true;
+    }
+
+    /**
+     * String Compression: Implement a method to perform basic string compression using the counts of repeated
+     * characters. For example, the string aabcccccaaa would become a2blc5a3. If the "compressed" string would not
+     * become smaller than the original string, your method should return the original string. You can assume the
+     * string has only uppercase and lowercase letters (a -z).
+     */
+    public static String compressString(String s1){
+        StringBuilder sb = new StringBuilder();
+        char checkChar = s1.charAt(0);
+        int occurance = 1;
+        for(int i = 1; i<s1.length(); i++){
+            if(s1.charAt(i) == checkChar){
+                occurance++;
+            }else{
+                sb.append(checkChar);
+                sb.append(occurance);
+                checkChar = s1.charAt(i);
+                occurance = 1;
+            }
+        }
+        sb.append(checkChar);
+        sb.append(occurance);
+        if(sb.toString().length() >= s1.length()){
+            return s1;
+        }else{
+            return sb.toString();
+        }
+    }
+
+    /**
+     * Rotate Matrix: Given an image represented by an NxN matrix, where each pixel in the image is 4 bytes,
+     * write a method to rotate the image by 90 degrees. Can you do this in place?
+     */
+    public static boolean rotateNxNMatrix(int[][] matrix){
+        if(matrix == null || matrix.length != matrix[0].length) return false;
+        int n = matrix.length;
+        for(int layer = 0; layer<n/2; layer++){
+            int first = layer;
+            int last = n - 1 - layer;
+            for(int j = first; j < last; j++){
+                int offset = j - first;
+                int temp = matrix[first][j];
+                matrix[first][j] = matrix[last - offset][first];
+                matrix[last-offset][first] = matrix[last][last-offset];
+                matrix[last][last-offset] = matrix[j][last];
+                matrix[j][last] = temp;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Zero Matrix: Write an algorithm such that if an element in an MxN matrix is 0, its entire row and column are
+     * set to 0.
+     */
+    public static boolean setRowColumnTo0(int[][] data){
+//        boolean[] row = new boolean[data.length];
+//        boolean[] column = new boolean[data[0].length];
+//
+//        for(int i = 0; i<data.length; i++){
+//            for(int j = 0; j<data.length; j++){
+//                if(data[i][j] == 0){
+//                    row[i] = true;
+//                    column[j] = true;
+//                }
+//            }
+//        }
+//
+//        for(int i = 0; i<row.length; i++){
+//            if(row[i]) zeroRow(data, i);
+//        }
+//
+//        for(int i = 0; i<column.length; i++){
+//            if(column[i]) zeroColumn(data, i);
+//        }
+
+
+        boolean rowHasZero = false, colHasZero = false;
+
+        for(int j = 0; j<data[0].length; j++){
+            if(data[0][j] == 0) {
+                rowHasZero = true;
+                break;
+            }
+        }
+
+        for(int i = 0; i<data.length; i++){
+            if(data[i][0] == 0){
+                colHasZero = true;
+                break;
+            }
+        }
+
+        for(int i = 1; i<data.length; i++){
+            for(int j = 1; j<data[0].length; j++){
+                if(data[i][j] == 0){
+                    data[i][0] = 0;
+                    data[0][j] = 0;
+                }
+            }
+        }
+
+        for(int i = 1; i<data.length; i++){
+            if(data[i][0] == 0) zeroRow(data, i);
+        }
+
+        for(int j = 1; j<data[0].length; j++){
+            if(data[0][j] == 0) zeroColumn(data,  j);
+        }
+
+        if(rowHasZero) zeroRow(data, 0);
+        if (colHasZero) zeroColumn(data, 0);
+
+        return true;
+    }
+
+    private static void zeroRow(int[][] data, int row) {
+        for(int i = 0; i<data[row].length; i++){
+            data[row][i] = 0;
+        }
+    }
+
+    private static void zeroColumn(int[][] data, int col){
+        for(int j = 0; j<data.length; j++){
+            data[j][col] = 0;
+        }
+    }
+
+    /**
+     * String Rotation: Assume you have a method isSubstring which checks if one word is a substring of another.
+     * Given two strings, s1 and s2, write code to check if s2 is a rotation of s1 using only one call to isSubString
+     * (e.g., "waterbottle" is a rotation of"erbottlewat").
+     */
+    public static boolean isRotation(String s1, String s2){
+        s2 = s2+s2;
+        return s2.contains(s1);
     }
 
 }
