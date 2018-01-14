@@ -9,7 +9,6 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-
     }
 
 
@@ -1022,11 +1021,11 @@ public class Main {
         int s2Iterator = 0;
 
         while (s1Iterator < shorterString.length() && s2Iterator < longerString.length()) {
-            if(shorterString.charAt(s1Iterator) != longerString.charAt(s2Iterator)){
-                if(isOneAwayCheck) return false;
-                if(!isOneAwayCheck) isOneAwayCheck = true;
-                if(shorterString.length() == longerString.length()) s1Iterator++;
-            }else{
+            if (shorterString.charAt(s1Iterator) != longerString.charAt(s2Iterator)) {
+                if (isOneAwayCheck) return false;
+                if (!isOneAwayCheck) isOneAwayCheck = true;
+                if (shorterString.length() == longerString.length()) s1Iterator++;
+            } else {
                 s1Iterator++;
             }
             s2Iterator++;
@@ -1040,14 +1039,14 @@ public class Main {
      * become smaller than the original string, your method should return the original string. You can assume the
      * string has only uppercase and lowercase letters (a -z).
      */
-    public static String compressString(String s1){
+    public static String compressString(String s1) {
         StringBuilder sb = new StringBuilder();
         char checkChar = s1.charAt(0);
         int occurance = 1;
-        for(int i = 1; i<s1.length(); i++){
-            if(s1.charAt(i) == checkChar){
+        for (int i = 1; i < s1.length(); i++) {
+            if (s1.charAt(i) == checkChar) {
                 occurance++;
-            }else{
+            } else {
                 sb.append(checkChar);
                 sb.append(occurance);
                 checkChar = s1.charAt(i);
@@ -1056,9 +1055,9 @@ public class Main {
         }
         sb.append(checkChar);
         sb.append(occurance);
-        if(sb.toString().length() >= s1.length()){
+        if (sb.toString().length() >= s1.length()) {
             return s1;
-        }else{
+        } else {
             return sb.toString();
         }
     }
@@ -1067,18 +1066,18 @@ public class Main {
      * Rotate Matrix: Given an image represented by an NxN matrix, where each pixel in the image is 4 bytes,
      * write a method to rotate the image by 90 degrees. Can you do this in place?
      */
-    public static boolean rotateNxNMatrix(int[][] matrix){
-        if(matrix == null || matrix.length != matrix[0].length) return false;
+    public static boolean rotateNxNMatrix(int[][] matrix) {
+        if (matrix == null || matrix.length != matrix[0].length) return false;
         int n = matrix.length;
-        for(int layer = 0; layer<n/2; layer++){
+        for (int layer = 0; layer < n / 2; layer++) {
             int first = layer;
             int last = n - 1 - layer;
-            for(int j = first; j < last; j++){
+            for (int j = first; j < last; j++) {
                 int offset = j - first;
                 int temp = matrix[first][j];
                 matrix[first][j] = matrix[last - offset][first];
-                matrix[last-offset][first] = matrix[last][last-offset];
-                matrix[last][last-offset] = matrix[j][last];
+                matrix[last - offset][first] = matrix[last][last - offset];
+                matrix[last][last - offset] = matrix[j][last];
                 matrix[j][last] = temp;
             }
         }
@@ -1089,7 +1088,7 @@ public class Main {
      * Zero Matrix: Write an algorithm such that if an element in an MxN matrix is 0, its entire row and column are
      * set to 0.
      */
-    public static boolean setRowColumnTo0(int[][] data){
+    public static boolean setRowColumnTo0(int[][] data) {
 //        boolean[] row = new boolean[data.length];
 //        boolean[] column = new boolean[data[0].length];
 //
@@ -1113,51 +1112,51 @@ public class Main {
 
         boolean rowHasZero = false, colHasZero = false;
 
-        for(int j = 0; j<data[0].length; j++){
-            if(data[0][j] == 0) {
+        for (int j = 0; j < data[0].length; j++) {
+            if (data[0][j] == 0) {
                 rowHasZero = true;
                 break;
             }
         }
 
-        for(int i = 0; i<data.length; i++){
-            if(data[i][0] == 0){
+        for (int i = 0; i < data.length; i++) {
+            if (data[i][0] == 0) {
                 colHasZero = true;
                 break;
             }
         }
 
-        for(int i = 1; i<data.length; i++){
-            for(int j = 1; j<data[0].length; j++){
-                if(data[i][j] == 0){
+        for (int i = 1; i < data.length; i++) {
+            for (int j = 1; j < data[0].length; j++) {
+                if (data[i][j] == 0) {
                     data[i][0] = 0;
                     data[0][j] = 0;
                 }
             }
         }
 
-        for(int i = 1; i<data.length; i++){
-            if(data[i][0] == 0) zeroRow(data, i);
+        for (int i = 1; i < data.length; i++) {
+            if (data[i][0] == 0) zeroRow(data, i);
         }
 
-        for(int j = 1; j<data[0].length; j++){
-            if(data[0][j] == 0) zeroColumn(data,  j);
+        for (int j = 1; j < data[0].length; j++) {
+            if (data[0][j] == 0) zeroColumn(data, j);
         }
 
-        if(rowHasZero) zeroRow(data, 0);
+        if (rowHasZero) zeroRow(data, 0);
         if (colHasZero) zeroColumn(data, 0);
 
         return true;
     }
 
     private static void zeroRow(int[][] data, int row) {
-        for(int i = 0; i<data[row].length; i++){
+        for (int i = 0; i < data[row].length; i++) {
             data[row][i] = 0;
         }
     }
 
-    private static void zeroColumn(int[][] data, int col){
-        for(int j = 0; j<data.length; j++){
+    private static void zeroColumn(int[][] data, int col) {
+        for (int j = 0; j < data.length; j++) {
             data[j][col] = 0;
         }
     }
@@ -1167,9 +1166,178 @@ public class Main {
      * Given two strings, s1 and s2, write code to check if s2 is a rotation of s1 using only one call to isSubString
      * (e.g., "waterbottle" is a rotation of"erbottlewat").
      */
-    public static boolean isRotation(String s1, String s2){
-        s2 = s2+s2;
+    public static boolean isRotation(String s1, String s2) {
+        s2 = s2 + s2;
         return s2.contains(s1);
     }
 
+    /**
+     * Remove Dups: Write code to remove duplicates from an unsorted linked list
+     */
+
+    static class Node {
+        Node next = null;
+        int data;
+
+        public Node(int data) {
+            this.data = data;
+        }
+
+        void appendToTail(int data) {
+            Node after = new Node(data);
+            Node n = this;
+            while (n.next != null) {
+                n = n.next;
+            }
+            n.next = after;
+        }
+    }
+
+    public Node removeDups(Node data) {
+//        Set<Integer> dataSet = new HashSet<>();
+//
+//        Node headPtr = new Node(-1);
+//        headPtr.next = data;
+//
+//        while(data.next != null){
+//            if(dataSet.contains(data.data)){
+//                data.data = data.next.data;
+//                data.next = data.next.next;
+//            }else{
+//                dataSet.add(data.data);
+//            }
+//            data = data.next;
+//        }
+//
+//        return headPtr.next;
+
+        //No additional space allowed
+        Node headPtr = new Node(-1);
+        headPtr.next = data;
+
+        Node current = data;
+
+        while (current != null) {
+            Node iter = current;
+            while (iter.next != null) {
+                if (iter.next.data == current.data) {
+                    iter.next = iter.next.next;
+                } else {
+                    iter = iter.next;
+                }
+            }
+            current = current.next;
+        }
+
+        return headPtr.next;
+
+    }
+
+    /**
+     * Return Kth to Last: Implement an algorithm to find the kth to last element of a singly linked list.
+     */
+    public Node findKthToLast(Node head, int k) {
+        Node iter1 = head;
+        Node iter2 = head;
+
+        //Move forward k spaces
+        for (int i = 0; i < k; i++) {
+            if (iter1 == null) return null;
+            iter1 = iter1.next;
+        }
+
+        //Move forward the rest of the space leaving the remainder which is k away from the end
+        while (iter1 != null) {
+            iter1 = iter1.next;
+            iter2 = iter2.next;
+        }
+
+        return iter2;
+    }
+
+    /**
+     * Implement an algorithm to delete a node in the middle (i.e., any node but the first and last node, not
+     * necessarily the exact middle) of a singly linked list, given only access to that node.
+     */
+    public void deleteNodeMid(Node data) {
+        if (data == null || data.next == null) return;
+        data.data = data.next.data;
+        data.next = data.next.next;
+    }
+
+
+    /**
+     * Partition: Write code to partition a linked list around a value x, such that all nodes less than x come before
+     * all nodes greater than or equal to x. If xis contained within the list the values of x only need to be after the
+     * elements less than x (see below). The partition element x can appear anywhere in the "right partition"; it does
+     * not need to appear between the left and right partitions.
+     */
+    public Node partitionAroundX(Node head, int x) {
+//        Node leftList = new Node(-1);
+//        Node leftIter = leftList;
+//        Node rightList = new Node(-1);
+//        Node rightIter = rightList;
+//        Node iter = head;
+//        while(iter != null){
+//            if(iter.data < x){
+//                leftIter.next = new Node(iter.data);
+//                leftIter = leftIter.next;
+//            }
+//            if(iter.data >= x){
+//                rightIter.next = new Node(iter.data);
+//                rightIter = rightIter.next;
+//            }
+//        }
+//
+//        rightIter = rightList.next;
+//
+//        leftIter.next = rightIter;
+//
+//        return leftList.next;
+
+        Node left = head;
+        Node right = head;
+
+        while (head != null) {
+            Node next = head.next;
+            if (head.data < x) {
+                head.next = left;
+                left = head;
+            } else {
+                right.next = head;
+                right = head;
+            }
+            head = next;
+        }
+        right.next = null;
+
+        return left;
+    }
+
+    /**
+     * Sum Lists: You have two numbers represented by a linked list, where each node contains a single digit. The digits
+     * are stored in reverse order, such that the 1 's digit is at the head of the list. Write a function that adds the
+     * two numbers and returns the sum as a linked list.
+     */
+    public Node addLists(Node num1, Node num2, int carry) {
+        if (num1 == null && num2 == null && carry == 0) return null;
+        Node result = new Node(-1);
+        int value = carry;
+        if (num1 != null) value += num1.data;
+        if (num2 != null) value += num2.data;
+        result.data = value % 10;
+        if (num1 != null || num2 != null) {
+            Node next = addLists(num1 == null ? null : num1.next, num2 == null ? null : num2.next, value / 10);
+            result.next = next;
+        }
+        return result;
+    }
+
+
+    /**
+     * Palindrome: Implement a function to check if a linked list is a palindrome.
+     */
+    public static boolean isListPalindrome(Node head) {
+        return false;
+    }
 }
