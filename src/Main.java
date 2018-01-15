@@ -1338,6 +1338,29 @@ public class Main {
      * Palindrome: Implement a function to check if a linked list is a palindrome.
      */
     public static boolean isListPalindrome(Node head) {
-        return false;
+        //Reverse the list
+        //Traverse it and check for equality
+        Node reverse = reverseList(head);
+        return ListsAreEqual(head, reverse);
+    }
+
+    private static Node reverseList(Node node) {
+        Node head= null;
+        while (node != null) {
+            Node n = new Node(node.data);
+            n.next = head;
+            head = n;
+            node = node.next;
+        }
+        return head;
+        }
+
+    private static boolean ListsAreEqual(Node one, Node two){
+         while (one != null && two != null) {
+             if (one.data != two.data) return false;
+             one = one.next;
+             two = two.next;
+         }
+         return one== null && two== null;
     }
 }
