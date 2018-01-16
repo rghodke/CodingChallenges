@@ -1363,4 +1363,155 @@ public class Main {
          }
          return one== null && two== null;
     }
+
+    /**
+     * Intersection: Given two (singly) linked lists, determine if the two lists intersect. Return the
+     * intersecting node. Note that the intersection is defined based on reference, not value. That is, if the kth
+     * node of the first linked list is the exact same node (by reference) as the jth node of the second linked list,
+     * then they are intersecting.
+     */
+    public static boolean twoListsOverlap(Node n1, Node n2){
+        //find lengths
+        int lengthN1 = findLength(n1);
+        int lengthN2 = findLength(n2);
+
+        //specify shorter/longer
+        Node shorter = lengthN1 < lengthN2 ? n1 : n2;
+        Node longer = lengthN1 < lengthN2 ? n2 : n1;
+
+        //Traverse longer list to be the same size as shorter
+        int k = Math.abs(lengthN1 - lengthN2);
+        while(k>0){
+            longer = longer.next;
+        }
+
+        //iterate through
+        while(shorter != null && longer != null){
+            if (shorter == longer) return true;
+            shorter = shorter.next;
+            longer = longer.next;
+        }
+
+        return false;
+    }
+
+    private static int findLength(Node n1) {
+        int length = 0;
+        while(n1 != null){
+            length++;
+            n1 = n1.next;
+        }
+        return length;
+    }
+
+    /**
+     * Loop Detection: Given a circular linked list, implement an algorithm that returns the node at the beginning
+     * of the loop. DEFINITION Circular linked list: A (corrupt) linked list in which a node's next pointer points
+     * to an earlier node, so as to make a loop in the linked list.
+     */
+    private static Node circularListStart(Node n1){
+        Node slow = n1;
+        Node fast = n1;
+        while (fast.next != null && fast != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) break;
+        }
+
+        if (fast == null || fast.next == null) return null; //no loop
+
+        slow = n1;
+        while (slow != fast){
+            slow = slow.next;
+            fast = fast.next;
+        }
+
+        return slow;
+    }
+
+    /**
+     * Given a sorted (increasing order) array with unique integer elements, write an algorithm to create a binary
+     * search tree with minimal height.
+     */
+    class TreeNode{
+
+        int data;
+        TreeNode left, right;
+
+        public TreeNode(int data){
+            this.data = data;
+        }
+
+        public void setLeft(TreeNode left) {
+            this.left = left;
+        }
+
+        public void setRight(TreeNode right) {
+            this.right = right;
+        }
+    }
+
+    /**
+     * Given a sorted (increasing order) array with unique integer elements, write an algorithm to create a
+     * binary search tree with minimal height.
+     */
+    public TreeNode createMinBST(int[] data, int start, int end){
+        if (data.length == 0) return null;
+        if(data.length == 1) return new TreeNode(data[0]);
+        if (end < start) return null;
+        int mid = (end-start)/2;
+        TreeNode root = new TreeNode(data[mid]);
+        root.setLeft(createMinBST(data, start, mid-1));
+        root.setRight(createMinBST(data, mid+1, end));
+        return root;
+    }
+
+    /**
+     * Route Between Nodes: Given a directed graph, design an algorithm to find out whether there is a route between
+     * two nodes.
+     */
+    public enum State{
+        Unvisited, Visiting, Visited
+    }
+
+    class GraphNode{
+        int data;
+        List<GraphNode> children;
+        public State state;
+
+        public GraphNode(int data){
+            this.data = data;
+            children = new ArrayList<>();
+            state = State.Unvisited;
+        }
+
+        public void addChild(GraphNode n){
+            children.add(n);
+        }
+        
+        public List<GraphNode> getChildren() {
+            return children;
+        }
+    }
+    
+    private static boolean pathExists(GraphNode start, GraphNode end){
+        Queue<GraphNode> nodesToBeVisited = new LinkedList<>();
+        start.state = State.Visiting;
+        nodesToBeVisited.add(start);
+        while(!nodesToBeVisited.isEmpty()){
+            GraphNode node = nodesToBeVisited.poll();
+            if (node == end) return true;
+            for (GraphNode child : node.children){
+                if (child.state == State.Unvisited){
+                    child.state = State.Visiting;
+                    nodesToBeVisited.add(child);
+                }
+            }
+            node.state = State.Visited;
+        }
+        return false;
+
+
+
+    }
 }
