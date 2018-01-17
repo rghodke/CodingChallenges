@@ -9,6 +9,10 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
+        TreeNode root = new TreeNode(10);
+        root.setLeft(new TreeNode(5));
+        root.setRight(new TreeNode(13));
+        System.out.println(isBST(root));
     }
 
 
@@ -1433,7 +1437,7 @@ public class Main {
      * Given a sorted (increasing order) array with unique integer elements, write an algorithm to create a binary
      * search tree with minimal height.
      */
-    class TreeNode{
+    static class TreeNode{
 
         int data;
         TreeNode left, right;
@@ -1510,7 +1514,145 @@ public class Main {
             node.state = State.Visited;
         }
         return false;
+    }
 
+    /**
+     * Find the contiguous subarray within an array (containing at least one number) which has the largest product.
+
+     For example, given the array [2,3,-2,4], the contiguous subarray [2,3] has the largest product = 6
+     */
+    public int largestProductSubarray(int[] data){
+        int max[] = new int[data.length];
+        int min[] = new int[data.length];
+        max[0] = data[0];
+        min[0] = data[0];
+        int result = data[0];
+        for(int i = 1; i<data.length; i++){
+            if(data[i] > 0){
+                max[i] = Math.max(max[i-1] * data[i], data[i]);
+                min[i] = Math.min(max[i-1] * data[i], data[i]);
+            }else{
+                max[i] = Math.max(min[i-1]*data[i], data[i]); //Get the biggest negative * current negative element
+                min[i] = Math.min(max[i-1]*data[i], data[i]); //The biggest positive * current negative element
+            }
+
+            result = Math.max(result, max[i]);
+        }
+        return result;
+    }
+
+    /**
+     * Given an array of n positive integers and a positive integer s, find the minimal length of a subarray of
+     * which the sum ≥ s. If there isn't one, return 0 instead.
+
+     For example, given the array [2,3,1,2,4,3] and s = 7, the subarray [4,3] has the minimal length of 2 under the problem constraint.
+     */
+    public static int lengthOfSmallestSubArrayThatAddsUpToK(int[] data, int k){
+        int leftIter = 0, rightIter = 0, sum = 0;
+        int minLength = Integer.MAX_VALUE;
+        while (leftIter < data.length){
+            if (sum < k){
+                sum += data[rightIter++];
+            }else {
+                minLength = Math.min(minLength, rightIter - leftIter);
+                sum -= data[leftIter++];
+            }
+        }
+        while (sum >= k){
+            minLength = Math.min(minLength, rightIter - leftIter);
+            sum -= data[leftIter++];
+        }
+
+        return minLength == Integer.MAX_VALUE ? 0 : minLength;
+    }
+
+
+    /**
+     * List of Depths: Given a binary tree, design an algorithm which creates a linked list of all the nodes at each
+     * depth (e.g., if you have a tree with depth D, you'll have D linked lists).
+     */
+
+    public static List<LinkedList<TreeNode>> generateListAtDepth(TreeNode node){
+        List<LinkedList<TreeNode>> nodeList = new ArrayList<>();
+        generateLinkedListAtDepth(node, nodeList, 0);
+        return nodeList;
+    }
+
+    public static void generateLinkedListAtDepth(TreeNode node, List<LinkedList<TreeNode>> depthList, int depth){
+        if (node == null) return;
+        LinkedList<TreeNode> nodeLinkedList;
+        if (depth == depthList.size()){
+            nodeLinkedList = new LinkedList<>();
+            depthList.add(nodeLinkedList);
+        }else{
+            nodeLinkedList = depthList.get(depth);
+        }
+        nodeLinkedList.add(node);
+        generateLinkedListAtDepth(node.left, depthList, depth+1);
+        generateLinkedListAtDepth(node.right, depthList, depth+1);
+    }
+
+    /**
+     * Check Balanced: Implement a function to check if a binary tree is balanced. For the purposes of this question,
+     * a balanced tree is defined to be a tree such that the heights of the two subtrees of any node never differ
+     * by more than one.
+     */
+
+    public static boolean isBalanced(TreeNode node){
+        return checkHeight(node) != Integer.MIN_VALUE;
+    }
+
+    public static int checkHeight(TreeNode node){
+        boolean result = true;
+        if (node==null) return -1;
+        int leftHeight = checkHeight(node.left);
+        if (leftHeight == Integer.MIN_VALUE) return Integer.MIN_VALUE;
+        int rightHeight = checkHeight(node.right);
+        if (rightHeight == Integer.MIN_VALUE) return Integer.MIN_VALUE;
+        int heightDiff = Math.abs(leftHeight - rightHeight);
+        if (heightDiff > 1){
+            return Integer.MIN_VALUE;
+        }else{
+            return Math.max(leftHeight, rightHeight) + 1;
+        }
+    }
+
+    /**
+     * Validate BST: Implement a function to check if a binary tree is a binary search tree.
+     */
+    public static boolean isBST(TreeNode node){
+        boolean ans = true;
+        if (node == null) return true;
+        TreeNode left = node.left, right = node.right;
+        if (left != null){
+            ans &= left.data <= node.data;
+        }
+        if (right != null){
+            ans &= right.data > node.data;
+        }
+        return ans && isBST(node.left) && isBST(node.right);
+    }
+
+    /**
+     Insertion: You are given two 32-bit numbers, N and M , and two bit positions, i and j. Write a method to insert
+     Minto N such that M starts at bit j and ends at bit i. You can assume that the bits j through i have enough space
+     to fit all of M. That is, if M = 10011, you can assume that there are at least 5 bits between j and i. You would
+     not, for example, have j = 3 and i = 2, because M could not fully fit between bit 3 and bit 2.
+     */
+    public static int updateNums(int a, int b, int i, int j){
+        int allOnes = ~0;
+
+        int left = allOnes << j+1;
+
+        int right = (1 << i) - 1;
+
+        int mask = left | right;
+
+        a = a & mask;
+
+        b= b << i;
+
+        return a | b;
 
 
     }
