@@ -9,10 +9,6 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        TreeNode root = new TreeNode(10);
-        root.setLeft(new TreeNode(5));
-        root.setRight(new TreeNode(13));
-        System.out.println(isBST(root));
     }
 
 
@@ -1653,7 +1649,101 @@ public class Main {
         b= b << i;
 
         return a | b;
+    }
 
+    /**
+     * Binary to String: Given a real number between 0 and 1 (e.g., 0.72) that is passed in as a double, print the
+     * binary representation. If the number cannot be represented accurately in binary with at most 32
+     * characters, print"ERROR:'
+     */
+    public static String printDecimalBinaryRepresentation(double dec){
+        double x = .5;
+        StringBuilder sb = new StringBuilder();
+        sb.append('.');
+        while(dec > 0){
+            if (sb.length() > 32){
+                return "ERROR";
+            }
+            if(dec >= x){
+                sb.append(1);
+                dec = dec - x;
+            }else{
+                sb.append(0);
+            }
+            x/=2;
 
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Flip Bit to Win: You have an integer and you can flip exactly one bit from a Oto a 1. Write code to find
+     * the length of the longest sequence of 1 s you could create.
+     */
+    public int lengthOfLongest1WithFlip(int x){
+//        String binaryStr = Integer.toBinaryString(x);
+//        int startOfLongestOne = binaryStr.indexOf('1');
+//        if (startOfLongestOne == -1){
+//            return 1;
+//        }
+//        int endOfLongestOne = startOfLongestOne;
+//        int curLength = 0;
+//        int maxLength = 1;
+//        for( int i = startOfLongestOne+1; i < binaryStr.length(); i++){
+//            if (binaryStr.charAt(i) == '1'){
+//                endOfLongestOne = i;
+//                curLength++;
+//            }else{
+//                startOfLongestOne = i;
+//                curLength = 0;
+//            }
+//            maxLength = Math.max(maxLength, endOfLongestOne - startOfLongestOne);
+//        }
+//
+//
+//        if (maxLength == 32){
+//            return maxLength; //if it can't be flipped, all 1's
+//        }
+//        return maxLength + 1; //if it can be flipped
+        if (x == ~0) return Integer.BYTES * 8;
+        int curLength = 0;
+        int maxLength = 0;
+        int prevLength = 0;
+        while (x > 0){
+            if ((x & 1) == 1) curLength++;
+            if ((x & 1) == 0){
+                //keep track of scenarios like 11101110(we can swap the middle 0 to one)
+                prevLength = ((x & 2) == 0) ? 0 : curLength;
+                curLength = 0;
+            }
+            x = x >>> 1;
+            maxLength = Math.max(maxLength, prevLength + curLength);
+        }
+        return maxLength + 1;
+    }
+
+    /**
+     * Triple Step: A child is running up a staircase with n steps and can hop either 1 step, 2 steps, or 3 steps at a
+     * time. Implement a method to count how many possible ways the child can run up the stairs
+     */
+    public static int printLargerAndSmaller(int n){
+        int[] cache = new int[n+1];
+        cache[0] = 0;
+        cache[1] = 1; //1 step
+        cache[2] = 2; //1+1 and 2
+        cache[3] = 4; //111,21,12,3
+        for(int i = 4; i<=n; i++){
+            cache[i] = cache[i-1] + cache[i-2] + cache[i-3];
+        }
+        return cache[n];
+    }
+
+    /**
+     * Robot in a Grid: Imagine a robot sitting on the upper left corner of grid with r rows and c columns. The robot
+     * can only move in two directions, right and down, but certain cells are "off limits" such that the robot cannot
+     * step on them. Design an algorithm to find a path for the robot from the top left to the bottom right.
+     */
+    public static int robotTraversal(int[][] matrix){
+        return -1;
     }
 }
