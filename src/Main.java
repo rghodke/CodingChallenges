@@ -9,6 +9,15 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
+        boolean[][] matrix = new boolean[2][2];
+        matrix[0][0] = true;
+        matrix[0][1] = true;
+        matrix[1][0] = true;
+        matrix[1][1] = true;
+        List<Point> l = robotTraversal(matrix);
+        for(Point p : l){
+            System.out.println("p.x " + p.x + "p.y " + p.y);
+        }
     }
 
 
@@ -1739,11 +1748,72 @@ public class Main {
     }
 
     /**
+     * A robot is located at the top-left corner of a m x n grid (marked 'Start' in the diagram below).
+
+     The robot can only move either down or right at any point in time. The robot is trying to reach the
+     bottom-right corner of the grid (marked 'Finish' in the diagram below).
+
+     How many possible unique paths are there?
+     */
+    public static int findUniquePaths(int m, int n){
+        int[][] paths = new int[m][n];
+        for (int i = 0; i<m; i++){
+            paths[i][0] = 1;
+        }
+        for (int i = 0; i<n; i++){
+            paths[0][i] = 1;
+        }
+        for (int i = 1; i<m; i++){
+            for (int j = 1; j<n; j++){
+                paths[i][j] = paths[i-1][j] + paths[i][j-1];
+            }
+        }
+
+        return paths[m-1][n-1];
+
+    }
+
+
+    /**
      * Robot in a Grid: Imagine a robot sitting on the upper left corner of grid with r rows and c columns. The robot
      * can only move in two directions, right and down, but certain cells are "off limits" such that the robot cannot
      * step on them. Design an algorithm to find a path for the robot from the top left to the bottom right.
      */
-    public static int robotTraversal(int[][] matrix){
-        return -1;
+
+    static class Point{
+        int x;
+        int y;
+
+        public Point(int x, int y){
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    public static List<Point> robotTraversal(boolean[][] matrix){
+        List<List<Point>> answerList = new ArrayList<>();
+        robotTraversalHelper(matrix, 0, 0, answerList, new ArrayList<Point>());
+        return answerList.get(0);
+    }
+
+    private static void robotTraversalHelper(boolean[][] matrix, int i, int j, List<List<Point>> answerList, ArrayList<Point> points) {
+        if (i == matrix.length-1 && j == matrix[matrix.length-1].length-1){
+            Point p = new Point(i, j);
+            points.add(p);
+            answerList.add(points);
+            return;
+        }
+        else if (i < matrix.length && j < matrix[i].length){
+            if (!matrix[i][j]){
+                return;
+            }
+            else{
+                Point p = new Point(i, j);
+                points.add(p);
+                robotTraversalHelper(matrix, i+1, j, answerList, points);
+                robotTraversalHelper(matrix, i, j+1, answerList, points);
+//                points.remove(p);
+            }
+        }
     }
 }
