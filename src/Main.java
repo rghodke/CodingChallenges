@@ -9,15 +9,8 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        boolean[][] matrix = new boolean[2][2];
-        matrix[0][0] = true;
-        matrix[0][1] = true;
-        matrix[1][0] = true;
-        matrix[1][1] = true;
-        List<Point> l = robotTraversal(matrix);
-        for(Point p : l){
-            System.out.println("p.x " + p.x + "p.y " + p.y);
-        }
+        int[] data = new int[]{-4, -2, 2, 2, 2, 3, 4, 7, 9, 12, 13};
+        System.out.println(findMagicIdx(data));
     }
 
 
@@ -1354,7 +1347,7 @@ public class Main {
     }
 
     private static Node reverseList(Node node) {
-        Node head= null;
+        Node head = null;
         while (node != null) {
             Node n = new Node(node.data);
             n.next = head;
@@ -1362,15 +1355,15 @@ public class Main {
             node = node.next;
         }
         return head;
-        }
+    }
 
-    private static boolean ListsAreEqual(Node one, Node two){
-         while (one != null && two != null) {
-             if (one.data != two.data) return false;
-             one = one.next;
-             two = two.next;
-         }
-         return one== null && two== null;
+    private static boolean ListsAreEqual(Node one, Node two) {
+        while (one != null && two != null) {
+            if (one.data != two.data) return false;
+            one = one.next;
+            two = two.next;
+        }
+        return one == null && two == null;
     }
 
     /**
@@ -1379,7 +1372,7 @@ public class Main {
      * node of the first linked list is the exact same node (by reference) as the jth node of the second linked list,
      * then they are intersecting.
      */
-    public static boolean twoListsOverlap(Node n1, Node n2){
+    public static boolean twoListsOverlap(Node n1, Node n2) {
         //find lengths
         int lengthN1 = findLength(n1);
         int lengthN2 = findLength(n2);
@@ -1390,12 +1383,12 @@ public class Main {
 
         //Traverse longer list to be the same size as shorter
         int k = Math.abs(lengthN1 - lengthN2);
-        while(k>0){
+        while (k > 0) {
             longer = longer.next;
         }
 
         //iterate through
-        while(shorter != null && longer != null){
+        while (shorter != null && longer != null) {
             if (shorter == longer) return true;
             shorter = shorter.next;
             longer = longer.next;
@@ -1406,7 +1399,7 @@ public class Main {
 
     private static int findLength(Node n1) {
         int length = 0;
-        while(n1 != null){
+        while (n1 != null) {
             length++;
             n1 = n1.next;
         }
@@ -1418,10 +1411,10 @@ public class Main {
      * of the loop. DEFINITION Circular linked list: A (corrupt) linked list in which a node's next pointer points
      * to an earlier node, so as to make a loop in the linked list.
      */
-    private static Node circularListStart(Node n1){
+    private static Node circularListStart(Node n1) {
         Node slow = n1;
         Node fast = n1;
-        while (fast.next != null && fast != null){
+        while (fast.next != null && fast != null) {
             slow = slow.next;
             fast = fast.next.next;
             if (slow == fast) break;
@@ -1430,7 +1423,7 @@ public class Main {
         if (fast == null || fast.next == null) return null; //no loop
 
         slow = n1;
-        while (slow != fast){
+        while (slow != fast) {
             slow = slow.next;
             fast = fast.next;
         }
@@ -1442,12 +1435,12 @@ public class Main {
      * Given a sorted (increasing order) array with unique integer elements, write an algorithm to create a binary
      * search tree with minimal height.
      */
-    static class TreeNode{
+    static class TreeNode {
 
         int data;
         TreeNode left, right;
 
-        public TreeNode(int data){
+        public TreeNode(int data) {
             this.data = data;
         }
 
@@ -1464,14 +1457,14 @@ public class Main {
      * Given a sorted (increasing order) array with unique integer elements, write an algorithm to create a
      * binary search tree with minimal height.
      */
-    public TreeNode createMinBST(int[] data, int start, int end){
+    public TreeNode createMinBST(int[] data, int start, int end) {
         if (data.length == 0) return null;
-        if(data.length == 1) return new TreeNode(data[0]);
+        if (data.length == 1) return new TreeNode(data[0]);
         if (end < start) return null;
-        int mid = (end-start)/2;
+        int mid = (end - start) / 2;
         TreeNode root = new TreeNode(data[mid]);
-        root.setLeft(createMinBST(data, start, mid-1));
-        root.setRight(createMinBST(data, mid+1, end));
+        root.setLeft(createMinBST(data, start, mid - 1));
+        root.setRight(createMinBST(data, mid + 1, end));
         return root;
     }
 
@@ -1479,39 +1472,39 @@ public class Main {
      * Route Between Nodes: Given a directed graph, design an algorithm to find out whether there is a route between
      * two nodes.
      */
-    public enum State{
+    public enum State {
         Unvisited, Visiting, Visited
     }
 
-    class GraphNode{
+    class GraphNode {
         int data;
         List<GraphNode> children;
         public State state;
 
-        public GraphNode(int data){
+        public GraphNode(int data) {
             this.data = data;
             children = new ArrayList<>();
             state = State.Unvisited;
         }
 
-        public void addChild(GraphNode n){
+        public void addChild(GraphNode n) {
             children.add(n);
         }
-        
+
         public List<GraphNode> getChildren() {
             return children;
         }
     }
-    
-    private static boolean pathExists(GraphNode start, GraphNode end){
+
+    private static boolean pathExists(GraphNode start, GraphNode end) {
         Queue<GraphNode> nodesToBeVisited = new LinkedList<>();
         start.state = State.Visiting;
         nodesToBeVisited.add(start);
-        while(!nodesToBeVisited.isEmpty()){
+        while (!nodesToBeVisited.isEmpty()) {
             GraphNode node = nodesToBeVisited.poll();
             if (node == end) return true;
-            for (GraphNode child : node.children){
-                if (child.state == State.Unvisited){
+            for (GraphNode child : node.children) {
+                if (child.state == State.Unvisited) {
                     child.state = State.Visiting;
                     nodesToBeVisited.add(child);
                 }
@@ -1523,22 +1516,22 @@ public class Main {
 
     /**
      * Find the contiguous subarray within an array (containing at least one number) which has the largest product.
-
-     For example, given the array [2,3,-2,4], the contiguous subarray [2,3] has the largest product = 6
+     * <p>
+     * For example, given the array [2,3,-2,4], the contiguous subarray [2,3] has the largest product = 6
      */
-    public int largestProductSubarray(int[] data){
+    public int largestProductSubarray(int[] data) {
         int max[] = new int[data.length];
         int min[] = new int[data.length];
         max[0] = data[0];
         min[0] = data[0];
         int result = data[0];
-        for(int i = 1; i<data.length; i++){
-            if(data[i] > 0){
-                max[i] = Math.max(max[i-1] * data[i], data[i]);
-                min[i] = Math.min(max[i-1] * data[i], data[i]);
-            }else{
-                max[i] = Math.max(min[i-1]*data[i], data[i]); //Get the biggest negative * current negative element
-                min[i] = Math.min(max[i-1]*data[i], data[i]); //The biggest positive * current negative element
+        for (int i = 1; i < data.length; i++) {
+            if (data[i] > 0) {
+                max[i] = Math.max(max[i - 1] * data[i], data[i]);
+                min[i] = Math.min(max[i - 1] * data[i], data[i]);
+            } else {
+                max[i] = Math.max(min[i - 1] * data[i], data[i]); //Get the biggest negative * current negative element
+                min[i] = Math.min(max[i - 1] * data[i], data[i]); //The biggest positive * current negative element
             }
 
             result = Math.max(result, max[i]);
@@ -1549,21 +1542,21 @@ public class Main {
     /**
      * Given an array of n positive integers and a positive integer s, find the minimal length of a subarray of
      * which the sum ≥ s. If there isn't one, return 0 instead.
-
-     For example, given the array [2,3,1,2,4,3] and s = 7, the subarray [4,3] has the minimal length of 2 under the problem constraint.
+     * <p>
+     * For example, given the array [2,3,1,2,4,3] and s = 7, the subarray [4,3] has the minimal length of 2 under the problem constraint.
      */
-    public static int lengthOfSmallestSubArrayThatAddsUpToK(int[] data, int k){
+    public static int lengthOfSmallestSubArrayThatAddsUpToK(int[] data, int k) {
         int leftIter = 0, rightIter = 0, sum = 0;
         int minLength = Integer.MAX_VALUE;
-        while (leftIter < data.length){
-            if (sum < k){
+        while (leftIter < data.length) {
+            if (sum < k) {
                 sum += data[rightIter++];
-            }else {
+            } else {
                 minLength = Math.min(minLength, rightIter - leftIter);
                 sum -= data[leftIter++];
             }
         }
-        while (sum >= k){
+        while (sum >= k) {
             minLength = Math.min(minLength, rightIter - leftIter);
             sum -= data[leftIter++];
         }
@@ -1577,24 +1570,24 @@ public class Main {
      * depth (e.g., if you have a tree with depth D, you'll have D linked lists).
      */
 
-    public static List<LinkedList<TreeNode>> generateListAtDepth(TreeNode node){
+    public static List<LinkedList<TreeNode>> generateListAtDepth(TreeNode node) {
         List<LinkedList<TreeNode>> nodeList = new ArrayList<>();
         generateLinkedListAtDepth(node, nodeList, 0);
         return nodeList;
     }
 
-    public static void generateLinkedListAtDepth(TreeNode node, List<LinkedList<TreeNode>> depthList, int depth){
+    public static void generateLinkedListAtDepth(TreeNode node, List<LinkedList<TreeNode>> depthList, int depth) {
         if (node == null) return;
         LinkedList<TreeNode> nodeLinkedList;
-        if (depth == depthList.size()){
+        if (depth == depthList.size()) {
             nodeLinkedList = new LinkedList<>();
             depthList.add(nodeLinkedList);
-        }else{
+        } else {
             nodeLinkedList = depthList.get(depth);
         }
         nodeLinkedList.add(node);
-        generateLinkedListAtDepth(node.left, depthList, depth+1);
-        generateLinkedListAtDepth(node.right, depthList, depth+1);
+        generateLinkedListAtDepth(node.left, depthList, depth + 1);
+        generateLinkedListAtDepth(node.right, depthList, depth + 1);
     }
 
     /**
@@ -1603,21 +1596,21 @@ public class Main {
      * by more than one.
      */
 
-    public static boolean isBalanced(TreeNode node){
+    public static boolean isBalanced(TreeNode node) {
         return checkHeight(node) != Integer.MIN_VALUE;
     }
 
-    public static int checkHeight(TreeNode node){
+    public static int checkHeight(TreeNode node) {
         boolean result = true;
-        if (node==null) return -1;
+        if (node == null) return -1;
         int leftHeight = checkHeight(node.left);
         if (leftHeight == Integer.MIN_VALUE) return Integer.MIN_VALUE;
         int rightHeight = checkHeight(node.right);
         if (rightHeight == Integer.MIN_VALUE) return Integer.MIN_VALUE;
         int heightDiff = Math.abs(leftHeight - rightHeight);
-        if (heightDiff > 1){
+        if (heightDiff > 1) {
             return Integer.MIN_VALUE;
-        }else{
+        } else {
             return Math.max(leftHeight, rightHeight) + 1;
         }
     }
@@ -1625,29 +1618,29 @@ public class Main {
     /**
      * Validate BST: Implement a function to check if a binary tree is a binary search tree.
      */
-    public static boolean isBST(TreeNode node){
+    public static boolean isBST(TreeNode node) {
         boolean ans = true;
         if (node == null) return true;
         TreeNode left = node.left, right = node.right;
-        if (left != null){
+        if (left != null) {
             ans &= left.data <= node.data;
         }
-        if (right != null){
+        if (right != null) {
             ans &= right.data > node.data;
         }
         return ans && isBST(node.left) && isBST(node.right);
     }
 
     /**
-     Insertion: You are given two 32-bit numbers, N and M , and two bit positions, i and j. Write a method to insert
-     Minto N such that M starts at bit j and ends at bit i. You can assume that the bits j through i have enough space
-     to fit all of M. That is, if M = 10011, you can assume that there are at least 5 bits between j and i. You would
-     not, for example, have j = 3 and i = 2, because M could not fully fit between bit 3 and bit 2.
+     * Insertion: You are given two 32-bit numbers, N and M , and two bit positions, i and j. Write a method to insert
+     * Minto N such that M starts at bit j and ends at bit i. You can assume that the bits j through i have enough space
+     * to fit all of M. That is, if M = 10011, you can assume that there are at least 5 bits between j and i. You would
+     * not, for example, have j = 3 and i = 2, because M could not fully fit between bit 3 and bit 2.
      */
-    public static int updateNums(int a, int b, int i, int j){
+    public static int updateNums(int a, int b, int i, int j) {
         int allOnes = ~0;
 
-        int left = allOnes << j+1;
+        int left = allOnes << j + 1;
 
         int right = (1 << i) - 1;
 
@@ -1655,7 +1648,7 @@ public class Main {
 
         a = a & mask;
 
-        b= b << i;
+        b = b << i;
 
         return a | b;
     }
@@ -1665,21 +1658,21 @@ public class Main {
      * binary representation. If the number cannot be represented accurately in binary with at most 32
      * characters, print"ERROR:'
      */
-    public static String printDecimalBinaryRepresentation(double dec){
+    public static String printDecimalBinaryRepresentation(double dec) {
         double x = .5;
         StringBuilder sb = new StringBuilder();
         sb.append('.');
-        while(dec > 0){
-            if (sb.length() > 32){
+        while (dec > 0) {
+            if (sb.length() > 32) {
                 return "ERROR";
             }
-            if(dec >= x){
+            if (dec >= x) {
                 sb.append(1);
                 dec = dec - x;
-            }else{
+            } else {
                 sb.append(0);
             }
-            x/=2;
+            x /= 2;
 
         }
         return sb.toString();
@@ -1689,7 +1682,7 @@ public class Main {
      * Flip Bit to Win: You have an integer and you can flip exactly one bit from a Oto a 1. Write code to find
      * the length of the longest sequence of 1 s you could create.
      */
-    public int lengthOfLongest1WithFlip(int x){
+    public int lengthOfLongest1WithFlip(int x) {
 //        String binaryStr = Integer.toBinaryString(x);
 //        int startOfLongestOne = binaryStr.indexOf('1');
 //        if (startOfLongestOne == -1){
@@ -1718,9 +1711,9 @@ public class Main {
         int curLength = 0;
         int maxLength = 0;
         int prevLength = 0;
-        while (x > 0){
+        while (x > 0) {
             if ((x & 1) == 1) curLength++;
-            if ((x & 1) == 0){
+            if ((x & 1) == 0) {
                 //keep track of scenarios like 11101110(we can swap the middle 0 to one)
                 prevLength = ((x & 2) == 0) ? 0 : curLength;
                 curLength = 0;
@@ -1735,41 +1728,41 @@ public class Main {
      * Triple Step: A child is running up a staircase with n steps and can hop either 1 step, 2 steps, or 3 steps at a
      * time. Implement a method to count how many possible ways the child can run up the stairs
      */
-    public static int printLargerAndSmaller(int n){
-        int[] cache = new int[n+1];
+    public static int printLargerAndSmaller(int n) {
+        int[] cache = new int[n + 1];
         cache[0] = 0;
         cache[1] = 1; //1 step
         cache[2] = 2; //1+1 and 2
         cache[3] = 4; //111,21,12,3
-        for(int i = 4; i<=n; i++){
-            cache[i] = cache[i-1] + cache[i-2] + cache[i-3];
+        for (int i = 4; i <= n; i++) {
+            cache[i] = cache[i - 1] + cache[i - 2] + cache[i - 3];
         }
         return cache[n];
     }
 
     /**
      * A robot is located at the top-left corner of a m x n grid (marked 'Start' in the diagram below).
-
-     The robot can only move either down or right at any point in time. The robot is trying to reach the
-     bottom-right corner of the grid (marked 'Finish' in the diagram below).
-
-     How many possible unique paths are there?
+     * <p>
+     * The robot can only move either down or right at any point in time. The robot is trying to reach the
+     * bottom-right corner of the grid (marked 'Finish' in the diagram below).
+     * <p>
+     * How many possible unique paths are there?
      */
-    public static int findUniquePaths(int m, int n){
+    public static int findUniquePaths(int m, int n) {
         int[][] paths = new int[m][n];
-        for (int i = 0; i<m; i++){
+        for (int i = 0; i < m; i++) {
             paths[i][0] = 1;
         }
-        for (int i = 0; i<n; i++){
+        for (int i = 0; i < n; i++) {
             paths[0][i] = 1;
         }
-        for (int i = 1; i<m; i++){
-            for (int j = 1; j<n; j++){
-                paths[i][j] = paths[i-1][j] + paths[i][j-1];
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                paths[i][j] = paths[i - 1][j] + paths[i][j - 1];
             }
         }
 
-        return paths[m-1][n-1];
+        return paths[m - 1][n - 1];
 
     }
 
@@ -1780,40 +1773,92 @@ public class Main {
      * step on them. Design an algorithm to find a path for the robot from the top left to the bottom right.
      */
 
-    static class Point{
+    static class Point {
         int x;
         int y;
 
-        public Point(int x, int y){
+        public Point(int x, int y) {
             this.x = x;
             this.y = y;
         }
     }
 
-    public static List<Point> robotTraversal(boolean[][] matrix){
+    public static List<Point> robotTraversal(boolean[][] matrix) {
         List<List<Point>> answerList = new ArrayList<>();
         robotTraversalHelper(matrix, 0, 0, answerList, new ArrayList<Point>());
         return answerList.get(0);
     }
 
     private static void robotTraversalHelper(boolean[][] matrix, int i, int j, List<List<Point>> answerList, ArrayList<Point> points) {
-        if (i == matrix.length-1 && j == matrix[matrix.length-1].length-1){
+        if (i == matrix.length - 1 && j == matrix[matrix.length - 1].length - 1) {
             Point p = new Point(i, j);
             points.add(p);
-            answerList.add(points);
+            answerList.add(new ArrayList<>(points));
             return;
-        }
-        else if (i < matrix.length && j < matrix[i].length){
-            if (!matrix[i][j]){
+        } else if (i < matrix.length && j < matrix[i].length) {
+            if (!matrix[i][j]) {
                 return;
-            }
-            else{
+            } else {
                 Point p = new Point(i, j);
                 points.add(p);
-                robotTraversalHelper(matrix, i+1, j, answerList, points);
-                robotTraversalHelper(matrix, i, j+1, answerList, points);
-//                points.remove(p);
+                robotTraversalHelper(matrix, i + 1, j, answerList, points);
+                robotTraversalHelper(matrix, i, j + 1, answerList, points);
+                points.remove(p);
             }
         }
+    }
+
+    /**
+     * Magic Index: A magic index in an array A[ 1 .•. n-1] is defined to be an index such that A[ i] i. Given a
+     * sorted array of distinct integers, write a method to find a magic index, if one exists, in array A.
+     */
+    public static int findMagicIdx(int[] data) {
+//        for (int i = 0; i<data.length; i++){
+//            if (data[i] == i) return i;
+//        }
+//        int left = 0;
+//        int right = data.length - 1;
+//
+//        int ans = -1;
+//
+//        while (left<=right){
+//            int m = right - (right-left)/2;
+//            if (data[m] == m){
+//              ans = m;
+//              return ans;
+//            }
+//            else if (data[m] > m){
+//                right = m;
+//            }
+//            else if (data[m]<m){
+//                left = m;
+//            }
+//        }
+//
+//        return ans;
+        return findMagicHelper(data, 0, data.length - 1);
+    }
+
+    public static int findMagicHelper(int data[], int left, int right) {
+        if (right < left) return -1;
+
+        int mid = right - (right - left) / 2;
+        int midVal = data[mid];
+        if (midVal == mid) return mid;
+
+        int leftIdx = Math.min(mid - 1, midVal);
+        int start = findMagicHelper(data, left, leftIdx);
+        if (start >= 0) return start;
+
+        int rightIdx = Math.max(mid + 1, midVal);
+        int end = findMagicHelper(data, rightIdx, right);
+        return end;
+    }
+
+    /**
+     * Power Set: Write a method to return all subsets of a set.
+     */
+    public List<List<Integer>> powerSet(List<Integer> data) {
+        return null;
     }
 }
