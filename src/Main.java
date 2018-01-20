@@ -1861,4 +1861,45 @@ public class Main {
     public List<List<Integer>> powerSet(List<Integer> data) {
         return null;
     }
+
+    /**
+     * Sorted Merge: You are given two sorted arrays, A and B, where A has a large enough buffer at the end to hold B.
+     * Write a method to merge B into A in sorted order.
+     */
+    public static int[] mergeArrays(int[] a, int[] b, int lastA, int lastB) {
+        int idxA = lastA - 1;
+        int idxB = lastB - 1;
+        int idxAB = lastA + lastB - 1;
+
+        //Rather than checking and assigning from the front and having to shift, assign from end
+        while (idxB >= 0) {
+            if (idxA >= 0 && a[idxA] > b[idxB]) {
+                a[idxAB--] = a[idxA--];
+            } else {
+                b[idxAB--] = b[idxB--];
+            }
+        }
+        //This isn't needed because we are using the a array thus they should already be in place
+        while (idxA >= 0) {
+            a[idxAB--] = a[idxA];
+        }
+        return a;
+    }
+
+    /**
+     * Group Anagrams: Write a method to sort an array so that all tne anagrams are next to each other
+     */
+    public static String[] sortAnagramString(String[] anagramArray) {
+        for (int i = 0; i < anagramArray.length; i++) {
+            char[] chars = anagramArray[i].toCharArray();
+            Arrays.sort(chars);
+            anagramArray[i] = String.valueOf(chars);
+        }
+
+        Comparator<String> comparator = Comparator.naturalOrder();
+
+        Arrays.sort(anagramArray, comparator);
+
+        return anagramArray;
+    }
 }
