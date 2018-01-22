@@ -9,8 +9,6 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        int[] data = new int[]{-4, -2, 2, 2, 2, 3, 4, 7, 9, 12, 13};
-        System.out.println(findMagicIdx(data));
     }
 
 
@@ -1902,4 +1900,124 @@ public class Main {
 
         return anagramArray;
     }
+
+    /**
+     * Search in Rotated Array: Given a sorted array of n integers that has been rotated an unknown number of times,
+     * write code to find an element in the array. You may assume that the array was originally sorted in increasing order.
+     */
+    public static int searchSortedArray(int[] data, int x){
+        int left = 0;
+        int right = data.length - 1;
+        while (left <= right){
+            int mid = right - (right-left)/2;
+            if (data[mid] == x) return mid;
+            //left half is ordered
+            if (data[left] < data[mid]){
+                if (x >= data[left] && x < data[mid]){ //if x exists in the ordered array
+                    right = mid-1;
+                }else{ //if x is not in the sorted array, its in the other half
+                    left = mid+1;
+                }
+            } else if (data[mid] < data[left]){ //right half is ordered
+                if (x > data[mid] && x <= data[right]){
+                    left = mid + 1;
+                }else{
+                    right = mid - 1;
+                }
+            } else if (data[mid] == data[left]){ //all repeats on left
+                if (data[mid] != data[right]){
+                    left = mid + 1;
+                }else{ //if both sides show up as all repeats, we have to do a standard O(n) search
+                    for (int i = 0; i<data.length; i++){
+                        if (data[i] == x) return i;
+                    }
+                }
+            }
+        }
+
+        return -1;
+    }
+
+
+    /**
+     * Sorted Search, No Size: You are given an array-like data structure Listy which lacks a size method. It does,
+     * however, have an elementAt ( i) method that returns the element at index i in 0( 1) time. If i is beyond the
+     * bounds of the data structure, it returns -1. (For this reason, the data structure only supports positive
+     * integers.) Given a Listy which contains sorted, positive integers, find the index at which an element x occurs.
+     * If x occurs multiple times, you may return any index.
+     */
+    public static int searchListy(List<Integer> listy, int x){
+        int size = 1;
+
+        while (listy.get(size) != null && listy.get(size) < x){
+            size = size * 2;
+        }
+
+        int left = 0, right = size;
+
+        while (left <= right){
+            int m = right - (right - left)/2;
+            if (listy.get(m) == x) return m;
+            else if (listy.get(m) > x) right = m - 1;
+            else if (listy.get(m) < x) left = m - 1;
+        }
+
+        return -1;
+    }
+
+    /**
+     * Given an array arr[] of size n containing integers. The problem is to find the length of the longest
+     * sub-array having sum equal to the given value k.
+     */
+    public static int[] subArrayAddingUpToK(int[] data, int k){
+//        int rightIter = 0;
+//        int leftIter = 0;
+//        int maxLen = Integer.MIN_VALUE;
+//        int start = 0, end = 0;
+//        int sum = 0;
+//        while (rightIter < data.length){
+//            sum += data[rightIter++];
+//            if (sum == k){
+//                start = leftIter;
+//                end = rightIter;
+//                maxLen = Math.max(maxLen, rightIter-leftIter);
+//            }
+//        }
+//
+//        while (leftIter < data.length){
+//            sum -= data[leftIter++];
+//            if (sum == k){
+//                maxLen = Math.max(maxLen, rightIter - leftIter);
+//            }
+//        }
+//
+//        return maxLen == Integer.MIN_VALUE ? null : Arrays.copyOfRange(data, start, end);
+
+        Map<Integer, Integer> sumToIdxMap = new HashMap<>();
+
+        int sum = 0;
+        int maxLength = -1;
+        int start = 0, end = 0;
+
+        for(int i = 0; i<data.length; i++){
+            sum += data[i];
+            if (sum == k){
+                maxLength = Math.max(maxLength, i+1);
+                end = i;
+            }
+            sumToIdxMap.putIfAbsent(sum, i);
+
+            //if the map has what you are missing
+            if (sumToIdxMap.containsKey(sum - k)){ //what you need to get to k if your sum is over
+                maxLength = Math.max(maxLength, i - sumToIdxMap.get(sum - k)); //curidx - idx of subarray to get rid of whats over k
+                start = sumToIdxMap.get(sum - k);
+                end = i;
+            }
+        }
+
+        return maxLength == -1 ? null : Arrays.copyOfRange(data, start, end);
+    }
+
+
+
 }
