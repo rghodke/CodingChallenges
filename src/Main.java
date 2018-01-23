@@ -9,6 +9,8 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
+        int[] tempData = new int[]{4, -8, 9, -4, 1, -8, -1, 6};
+        findMaxKSums(tempData, 4);
     }
 
 
@@ -2018,6 +2020,129 @@ public class Main {
         return maxLength == -1 ? null : Arrays.copyOfRange(data, start, end);
     }
 
+    /**
+     *
+     * Give a positive integer n, find modular multiplicative inverse of all integer from 1 to n with
+     * respect to a big prime number, say, ‘prime’.
 
+     The modular multiplicative inverse of a is an integer ‘x’ such that.
+
+     a x ≡ 1 (mod prime)
+     */
+    public static int[] modInverse(int a, int prime){
+        int dp[] = new int[a+1];
+        dp[0] = dp[1] = 1;
+        for (int i = 2; i<=a; i++){
+            dp[i] = dp[prime % i] * (prime-prime/i)%prime;
+        }
+        return dp;
+    }
+
+    /**
+     * Given two numbers, the task is to use alternative bits within two numbers to create result. We take first bits
+     * of second number, then second bit of the first number, third bit of second number and take the fourth bit of a
+     * first number and so on and generate a number with it.
+     */
+    public static String constructNumber(int a, int b){
+//        StringBuilder sb = new StringBuilder();
+//
+//        String aStr = Integer.toBinaryString(a);
+//        String bStr = Integer.toBinaryString(b);
+//
+//        boolean isB = true;
+//        int aIter = aStr.length()-1, bIter = bStr.length() - 1;
+//        while(aIter >= 0 && bIter >= 0){
+//            if(isB){
+//                sb.append(bStr.charAt(bIter));
+//            }
+//            else{
+//                sb.append(aStr.charAt(aIter));
+//            }
+//            aIter--;
+//            bIter--;
+//            isB = !isB;
+//        }
+//        return sb.reverse().toString();
+
+        int oddDigitsOfB = 0;
+        boolean isOddDigit = true;
+        for(int iter = b; iter > 0; iter>>=1){
+            if (isOddDigit){
+                oddDigitsOfB |= b & 1;
+            }
+            oddDigitsOfB = oddDigitsOfB << 1;
+            isOddDigit = !isOddDigit;
+        }
+
+        oddDigitsOfB >>>= 1;
+
+        int evenDigitsOfA = 0;
+        boolean isEvenDigit = false;
+        for(int iter = a; iter > 0; iter>>=1){
+            if (isEvenDigit){
+                evenDigitsOfA |= iter & 1;
+            }
+            evenDigitsOfA = evenDigitsOfA << 1;
+            isEvenDigit = !isEvenDigit;
+        }
+
+        int ans = (oddDigitsOfB | evenDigitsOfA);
+        return Integer.toBinaryString(ans);
+
+    }
+
+    /**
+     * Given an Array of Integers and an Integer value k, find out k sub-arrays(may be overlapping) which
+     * have k maximum sums.
+     */
+    public static void findMaxKSums(int[] data, int k){
+        PriorityQueue<Integer> maxSum = new PriorityQueue<>((o1, o2) -> Integer.compare(o2, o1));
+
+        for (int i = 0; i<data.length; i++){
+            for (int j = i; j<data.length; j++){
+                maxSum.add(sumArray(data, i, j));
+            }
+        }
+
+//        for (int x : data) maxSum.add(x);
+//        addMaxSumHelper(maxSum, data, 0, data.length-1);
+////        while (!maxSum.isEmpty()){
+//            System.out.println(maxSum.poll());
+//        }
+        while (k-- > 0){
+            System.out.println(maxSum.poll());
+        }
+    }
+
+    private static Integer sumArray(int[] data, int i, int j) {
+        int sum = 0;
+        for (;i<=j; i++){
+            sum += data[i];
+        }
+        return sum;
+    }
+
+    private static void addMaxSumHelper(PriorityQueue<Integer> maxSum, int[] data, int l, int h){
+        if (l == h){
+            maxSum.add(data[l]);
+            return;
+        }
+        int m = (l+h)/2;
+        addMaxSumHelper(maxSum, data, l, m);
+        addMaxSumHelper(maxSum, data, m+1, h);
+        System.out.println("l " + l + " h " + h + " maxSum " + findSumOfSubArray(data, l, h));
+        maxSum.add(findSumOfSubArray(data, l, h));
+        return;
+    }
+
+    private static int findSumOfSubArray(int[] data, int l, int h) {
+        int sum = data[l];
+        int curMax = data[l];
+        for (int i = l+1; i<=h; i++){
+            sum = Math.max(data[i], sum + data[i]);
+            curMax = Math.max(sum, curMax);
+        }
+        return curMax;
+    }
 
 }
