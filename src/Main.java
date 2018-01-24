@@ -9,8 +9,8 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        int[] tempData = new int[]{4, -8, 9, -4, 1, -8, -1, 6};
-        findMaxKSums(tempData, 4);
+
+        System.out.println(Integer.toBinaryString(findXNOR(10,20)));
     }
 
 
@@ -2145,4 +2145,80 @@ public class Main {
         return curMax;
     }
 
+    /**
+     * Given a string s that may have duplicate characters. Find out the lexicographic rank of s. s may consist
+     * lower as well as upper case letters. We consider the lexicographic order of characters as their order of ACCII
+     * value. Hence the lexicographical order of characters will be ‘A’, ‘B’, ‘C’, …, ‘Y’, ‘Z’, ‘a’, ‘b’, ‘c’, …, ‘y’, ‘z’.
+     */
+    public static int findLexographicalOrder(String s){
+        Set<String> allPermuations = new HashSet<>();
+        char[] sortedSArr = s.toCharArray();
+        Arrays.sort(sortedSArr);
+        String sortedS = new String(sortedSArr);
+        allPermuations = findAllPermutations(sortedS);
+        List<String> allPermutationsList = new ArrayList<>(allPermuations);
+        Collections.sort(allPermutationsList, Comparator.naturalOrder());
+        for (int i = 0; i<allPermutationsList.size(); i++){
+            if (allPermutationsList.get(i).equals(s)) return i+1;
+        }
+        return -1;
+    }
+
+    private static Set<String> findAllPermutations(String s){
+        Set<String> permList = new HashSet<>();
+        findAllPermutationsHelper(s, 0, 1, permList);
+        return permList;
+    }
+
+    private static void findAllPermutationsHelper(String s, int i, int j, Set<String> permList) {
+        if (j >= s.length() || i >= s.length()) return;
+        if (j < i) return;
+        permList.add(s);
+        findAllPermutationsHelper(s, i, j+1, permList);
+        findAllPermutationsHelper(s, i+1, j, permList);
+        String sSwap = swap(s, i, j);
+        findAllPermutationsHelper(sSwap, i, j+1, permList);
+        findAllPermutationsHelper(sSwap, i+1, j, permList);
+    }
+
+    /**
+     * XNOR gives the reverse of XOR if binary bit.
+     */
+    public static int findXNOR(int a, int b){
+
+        // if num2 is greater then
+        // we swap this number in num1
+        if (a < b)
+        {
+            int temp = a;
+            a = b;
+            b = temp;
+        }
+
+        a = togglebit(a);
+
+        return a ^ b;
+
+    }
+
+    private static int togglebit(int n)
+    {
+        if (n == 0)
+            return 1;
+
+        int i = n;
+
+        n |= n >> 1;
+        n |= n >> 2;
+        n |= n >> 4;
+        n |= n >> 8;
+        n |= n >> 16;
+
+        return i ^ n;
+    }
+
+
+    /**
+     * 
+     */
 }
