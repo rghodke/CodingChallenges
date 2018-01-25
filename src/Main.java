@@ -9,8 +9,7 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-
-        System.out.println(Integer.toBinaryString(findXNOR(10,20)));
+        System.out.println(findLongestSubseq("AGGTAB", "GXTXAYB"));
     }
 
 
@@ -1907,30 +1906,30 @@ public class Main {
      * Search in Rotated Array: Given a sorted array of n integers that has been rotated an unknown number of times,
      * write code to find an element in the array. You may assume that the array was originally sorted in increasing order.
      */
-    public static int searchSortedArray(int[] data, int x){
+    public static int searchSortedArray(int[] data, int x) {
         int left = 0;
         int right = data.length - 1;
-        while (left <= right){
-            int mid = right - (right-left)/2;
+        while (left <= right) {
+            int mid = right - (right - left) / 2;
             if (data[mid] == x) return mid;
             //left half is ordered
-            if (data[left] < data[mid]){
-                if (x >= data[left] && x < data[mid]){ //if x exists in the ordered array
-                    right = mid-1;
-                }else{ //if x is not in the sorted array, its in the other half
-                    left = mid+1;
-                }
-            } else if (data[mid] < data[left]){ //right half is ordered
-                if (x > data[mid] && x <= data[right]){
+            if (data[left] < data[mid]) {
+                if (x >= data[left] && x < data[mid]) { //if x exists in the ordered array
+                    right = mid - 1;
+                } else { //if x is not in the sorted array, its in the other half
                     left = mid + 1;
-                }else{
+                }
+            } else if (data[mid] < data[left]) { //right half is ordered
+                if (x > data[mid] && x <= data[right]) {
+                    left = mid + 1;
+                } else {
                     right = mid - 1;
                 }
-            } else if (data[mid] == data[left]){ //all repeats on left
-                if (data[mid] != data[right]){
+            } else if (data[mid] == data[left]) { //all repeats on left
+                if (data[mid] != data[right]) {
                     left = mid + 1;
-                }else{ //if both sides show up as all repeats, we have to do a standard O(n) search
-                    for (int i = 0; i<data.length; i++){
+                } else { //if both sides show up as all repeats, we have to do a standard O(n) search
+                    for (int i = 0; i < data.length; i++) {
                         if (data[i] == x) return i;
                     }
                 }
@@ -1948,17 +1947,17 @@ public class Main {
      * integers.) Given a Listy which contains sorted, positive integers, find the index at which an element x occurs.
      * If x occurs multiple times, you may return any index.
      */
-    public static int searchListy(List<Integer> listy, int x){
+    public static int searchListy(List<Integer> listy, int x) {
         int size = 1;
 
-        while (listy.get(size) != null && listy.get(size) < x){
+        while (listy.get(size) != null && listy.get(size) < x) {
             size = size * 2;
         }
 
         int left = 0, right = size;
 
-        while (left <= right){
-            int m = right - (right - left)/2;
+        while (left <= right) {
+            int m = right - (right - left) / 2;
             if (listy.get(m) == x) return m;
             else if (listy.get(m) > x) right = m - 1;
             else if (listy.get(m) < x) left = m - 1;
@@ -1971,7 +1970,7 @@ public class Main {
      * Given an array arr[] of size n containing integers. The problem is to find the length of the longest
      * sub-array having sum equal to the given value k.
      */
-    public static int[] subArrayAddingUpToK(int[] data, int k){
+    public static int[] subArrayAddingUpToK(int[] data, int k) {
 //        int rightIter = 0;
 //        int leftIter = 0;
 //        int maxLen = Integer.MIN_VALUE;
@@ -2001,16 +2000,16 @@ public class Main {
         int maxLength = -1;
         int start = 0, end = 0;
 
-        for(int i = 0; i<data.length; i++){
+        for (int i = 0; i < data.length; i++) {
             sum += data[i];
-            if (sum == k){
-                maxLength = Math.max(maxLength, i+1);
+            if (sum == k) {
+                maxLength = Math.max(maxLength, i + 1);
                 end = i;
             }
             sumToIdxMap.putIfAbsent(sum, i);
 
             //if the map has what you are missing
-            if (sumToIdxMap.containsKey(sum - k)){ //what you need to get to k if your sum is over
+            if (sumToIdxMap.containsKey(sum - k)) { //what you need to get to k if your sum is over
                 maxLength = Math.max(maxLength, i - sumToIdxMap.get(sum - k)); //curidx - idx of subarray to get rid of whats over k
                 start = sumToIdxMap.get(sum - k);
                 end = i;
@@ -2021,19 +2020,18 @@ public class Main {
     }
 
     /**
-     *
      * Give a positive integer n, find modular multiplicative inverse of all integer from 1 to n with
      * respect to a big prime number, say, ‘prime’.
-
-     The modular multiplicative inverse of a is an integer ‘x’ such that.
-
-     a x ≡ 1 (mod prime)
+     * <p>
+     * The modular multiplicative inverse of a is an integer ‘x’ such that.
+     * <p>
+     * a x ≡ 1 (mod prime)
      */
-    public static int[] modInverse(int a, int prime){
-        int dp[] = new int[a+1];
+    public static int[] modInverse(int a, int prime) {
+        int dp[] = new int[a + 1];
         dp[0] = dp[1] = 1;
-        for (int i = 2; i<=a; i++){
-            dp[i] = dp[prime % i] * (prime-prime/i)%prime;
+        for (int i = 2; i <= a; i++) {
+            dp[i] = dp[prime % i] * (prime - prime / i) % prime;
         }
         return dp;
     }
@@ -2043,7 +2041,7 @@ public class Main {
      * of second number, then second bit of the first number, third bit of second number and take the fourth bit of a
      * first number and so on and generate a number with it.
      */
-    public static String constructNumber(int a, int b){
+    public static String constructNumber(int a, int b) {
 //        StringBuilder sb = new StringBuilder();
 //
 //        String aStr = Integer.toBinaryString(a);
@@ -2066,8 +2064,8 @@ public class Main {
 
         int oddDigitsOfB = 0;
         boolean isOddDigit = true;
-        for(int iter = b; iter > 0; iter>>=1){
-            if (isOddDigit){
+        for (int iter = b; iter > 0; iter >>= 1) {
+            if (isOddDigit) {
                 oddDigitsOfB |= b & 1;
             }
             oddDigitsOfB = oddDigitsOfB << 1;
@@ -2078,8 +2076,8 @@ public class Main {
 
         int evenDigitsOfA = 0;
         boolean isEvenDigit = false;
-        for(int iter = a; iter > 0; iter>>=1){
-            if (isEvenDigit){
+        for (int iter = a; iter > 0; iter >>= 1) {
+            if (isEvenDigit) {
                 evenDigitsOfA |= iter & 1;
             }
             evenDigitsOfA = evenDigitsOfA << 1;
@@ -2095,11 +2093,11 @@ public class Main {
      * Given an Array of Integers and an Integer value k, find out k sub-arrays(may be overlapping) which
      * have k maximum sums.
      */
-    public static void findMaxKSums(int[] data, int k){
+    public static void findMaxKSums(int[] data, int k) {
         PriorityQueue<Integer> maxSum = new PriorityQueue<>((o1, o2) -> Integer.compare(o2, o1));
 
-        for (int i = 0; i<data.length; i++){
-            for (int j = i; j<data.length; j++){
+        for (int i = 0; i < data.length; i++) {
+            for (int j = i; j < data.length; j++) {
                 maxSum.add(sumArray(data, i, j));
             }
         }
@@ -2109,27 +2107,27 @@ public class Main {
 ////        while (!maxSum.isEmpty()){
 //            System.out.println(maxSum.poll());
 //        }
-        while (k-- > 0){
+        while (k-- > 0) {
             System.out.println(maxSum.poll());
         }
     }
 
     private static Integer sumArray(int[] data, int i, int j) {
         int sum = 0;
-        for (;i<=j; i++){
+        for (; i <= j; i++) {
             sum += data[i];
         }
         return sum;
     }
 
-    private static void addMaxSumHelper(PriorityQueue<Integer> maxSum, int[] data, int l, int h){
-        if (l == h){
+    private static void addMaxSumHelper(PriorityQueue<Integer> maxSum, int[] data, int l, int h) {
+        if (l == h) {
             maxSum.add(data[l]);
             return;
         }
-        int m = (l+h)/2;
+        int m = (l + h) / 2;
         addMaxSumHelper(maxSum, data, l, m);
-        addMaxSumHelper(maxSum, data, m+1, h);
+        addMaxSumHelper(maxSum, data, m + 1, h);
         System.out.println("l " + l + " h " + h + " maxSum " + findSumOfSubArray(data, l, h));
         maxSum.add(findSumOfSubArray(data, l, h));
         return;
@@ -2138,7 +2136,7 @@ public class Main {
     private static int findSumOfSubArray(int[] data, int l, int h) {
         int sum = data[l];
         int curMax = data[l];
-        for (int i = l+1; i<=h; i++){
+        for (int i = l + 1; i <= h; i++) {
             sum = Math.max(data[i], sum + data[i]);
             curMax = Math.max(sum, curMax);
         }
@@ -2150,7 +2148,7 @@ public class Main {
      * lower as well as upper case letters. We consider the lexicographic order of characters as their order of ACCII
      * value. Hence the lexicographical order of characters will be ‘A’, ‘B’, ‘C’, …, ‘Y’, ‘Z’, ‘a’, ‘b’, ‘c’, …, ‘y’, ‘z’.
      */
-    public static int findLexographicalOrder(String s){
+    public static int findLexographicalOrder(String s) {
         Set<String> allPermuations = new HashSet<>();
         char[] sortedSArr = s.toCharArray();
         Arrays.sort(sortedSArr);
@@ -2158,13 +2156,13 @@ public class Main {
         allPermuations = findAllPermutations(sortedS);
         List<String> allPermutationsList = new ArrayList<>(allPermuations);
         Collections.sort(allPermutationsList, Comparator.naturalOrder());
-        for (int i = 0; i<allPermutationsList.size(); i++){
-            if (allPermutationsList.get(i).equals(s)) return i+1;
+        for (int i = 0; i < allPermutationsList.size(); i++) {
+            if (allPermutationsList.get(i).equals(s)) return i + 1;
         }
         return -1;
     }
 
-    private static Set<String> findAllPermutations(String s){
+    private static Set<String> findAllPermutations(String s) {
         Set<String> permList = new HashSet<>();
         findAllPermutationsHelper(s, 0, 1, permList);
         return permList;
@@ -2174,22 +2172,21 @@ public class Main {
         if (j >= s.length() || i >= s.length()) return;
         if (j < i) return;
         permList.add(s);
-        findAllPermutationsHelper(s, i, j+1, permList);
-        findAllPermutationsHelper(s, i+1, j, permList);
+        findAllPermutationsHelper(s, i, j + 1, permList);
+        findAllPermutationsHelper(s, i + 1, j, permList);
         String sSwap = swap(s, i, j);
-        findAllPermutationsHelper(sSwap, i, j+1, permList);
-        findAllPermutationsHelper(sSwap, i+1, j, permList);
+        findAllPermutationsHelper(sSwap, i, j + 1, permList);
+        findAllPermutationsHelper(sSwap, i + 1, j, permList);
     }
 
     /**
      * XNOR gives the reverse of XOR if binary bit.
      */
-    public static int findXNOR(int a, int b){
+    public static int findXNOR(int a, int b) {
 
         // if num2 is greater then
         // we swap this number in num1
-        if (a < b)
-        {
+        if (a < b) {
             int temp = a;
             a = b;
             b = temp;
@@ -2201,8 +2198,7 @@ public class Main {
 
     }
 
-    private static int togglebit(int n)
-    {
+    private static int togglebit(int n) {
         if (n == 0)
             return 1;
 
@@ -2219,6 +2215,89 @@ public class Main {
 
 
     /**
-     * 
+     * This problem is to rotate a given array to the right by n steps.
+     * <p>
+     * For example:
+     * <p>
+     * Given [1, 2, 3] and n = 1, you should return [3, 1, 2]
+     * <p>
+     * Each step, the last element in the array is moved to the front of the array, and the rest are shifted right.
+     * <p>
+     * Another example:
+     * <p>
+     * Given [1, 2, 3, 4, 5] and n = 3, you should return [3, 4, 5, 1, 2]
      */
+    public static int[] rotateArrayRight(int[] data, int r) {
+//        while (k-- > 0){
+//            data = rotateArrayRightOnce(data);
+//        }
+//        return data;
+        int n = data.length;
+        int i, j, k, temp;
+
+        for (i = 0; i < gcd(r, n); i++) {
+            temp = data[i];
+            j = i;
+            while (true) {
+                k = j + r;
+                if (k >= n) {
+                    k -= n;
+                }
+                if (k == i) {
+                    break;
+                }
+                data[j] = data[k];
+                j = k;
+            }
+            data[j] = temp;
+        }
+        return data;
+    }
+
+    private static int[] rotateArrayRightOnce(int[] data) {
+        /*
+        int[] rotated = new int[data.length];
+        for(int i = data.length - 1; i > 0; i--){
+            rotated[i] = data[i-1];
+        }
+        rotated[0] = data[data.length - 1];
+        return rotated;
+        */
+        //Instead of making new array, use the original array and have a temp variable for thr only element you need;
+        int temp = data[data.length - 1];
+        //Populate in reverse
+        for (int i = data.length - 1; i > 0; i--) {
+            data[i] = data[i - 1];
+        }
+        data[0] = temp;
+        return data;
+    }
+
+    static int gcd(int a, int b) {
+        if (b == 0) return a;
+        return gcd(b, a % b);
+    }
+
+    /**
+     * LCS Problem Statement: Given two sequences, find the length of longest subsequence present in both of them.
+     * A subsequence is a sequence that appears in the same relative order, but not necessarily contiguous. For
+     * example, “abc”, “abg”, “bdf”, “aeg”, ‘”acefg”, .. etc are subsequences of “abcdefg”. So a string of length
+     * n has 2^n different possible subsequences.
+     */
+    public static String findLongestSubseq(String s1, String s2) {
+        Map<Character, Integer> charCount = new HashMap<>();
+        for (Character c : s1.toCharArray()) {
+            charCount.putIfAbsent(c, 0);
+            charCount.put(c, charCount.get(c) + 1);
+        }
+        StringBuilder sb = new StringBuilder();
+        for (Character c : s2.toCharArray()) {
+            if (charCount.containsKey(c)) {
+                if (charCount.get(c) > 0)
+                    sb.append(c);
+                charCount.put(c, charCount.get(c) - 1);
+            }
+        }
+        return sb.toString();
+    }
 }
