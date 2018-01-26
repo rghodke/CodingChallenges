@@ -9,7 +9,8 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println(findLongestSubseq("AGGTAB", "GXTXAYB"));
+        int[] ans = removeDupsSortedArr(new int[]{1, 1, 2, 2, 3, 4, 5, 5, 5,});
+        for (int x : ans) System.out.println(x);
     }
 
 
@@ -2300,4 +2301,21 @@ public class Main {
         }
         return sb.toString();
     }
+
+    /**
+     * Remove duplicates from a sorted array
+     */
+    public static int[] removeDupsSortedArr(int[] data) {
+        int writeIdx = 0;
+        for (int i = 0; i < data.length; i++) {
+            if (data[writeIdx] != data[i]) {
+                data[++writeIdx] = data[i];
+            }
+        }
+        return Arrays.copyOfRange(data, 0, writeIdx + 1);
+    }
+
+    /**
+     *
+     */
 }
