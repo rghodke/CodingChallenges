@@ -9,8 +9,7 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        int[] ans = removeDupsSortedArr(new int[]{1, 1, 2, 2, 3, 4, 5, 5, 5,});
-        for (int x : ans) System.out.println(x);
+        System.out.println(findClosetPalindrome(3130));
     }
 
 
@@ -2316,6 +2315,160 @@ public class Main {
     }
 
     /**
-     *
+     * Buy and Sell a Stock Once
      */
+    public double buySellOnce(double[] data) {
+        //If you have the condition that you can only operate with prev elements, assign as you traverse the array
+        double curMax = 0;
+        double curMin = Double.MAX_VALUE;
+        double maxProfit = 0;
+        for (double price : data) {
+            maxProfit = Math.max(maxProfit, price - curMin);
+            curMin = Math.min(price, curMax);
+        }
+        return maxProfit;
+    }
+
+    /**
+     * Write a program that takes an array of integers and finds the length of longest subarray whose entries are equal
+     */
+    public static int lengthOfLongestEqualSubArray(int[] data) {
+//        int length = 1;
+//        for (int i = 0; i < data.length; i++){
+//            int curLength = 1;
+//            for (int j = i + 1; j < data.length; j++){
+//                if(data[i] == data[j]){
+//                    curLength++;
+//                    length = Math.max(length, curLength);
+//                }
+//            }
+//        }
+//        return length;
+        int curMaxLength = 1;
+        int length = 1;
+        int elem = data[0];
+        for (int i = 1; i < data.length; i++) {
+            if (data[i] == elem) {
+                length++;
+                curMaxLength = Math.max(curMaxLength, length);
+            } else {
+                elem = data[i];
+                length = 1;
+            }
+        }
+        return curMaxLength;
+    }
+
+    /**
+     * Buy and sell twice
+     */
+    public static double buyAndSellStockTwice(double[] prices) {
+        //O(n) time and space
+        double[] profit = new double[prices.length];
+        Arrays.fill(profit, 0);
+        double max_price = prices[prices.length - 1];
+        for (int i = prices.length - 2; i < prices.length; i++) {
+            //We can only subtract a bigger idx from a smaller idx so we get the max price while iterating and
+            //subtract appropriately
+            max_price = Math.max(max_price, prices[i]);
+            profit[i] = Math.max(profit[i + 1], profit[i] + max_price - prices[i]);
+        }
+
+        double min_price = prices[0];
+        for (int i = 1; i < prices.length; i++) {
+            //We can only subtract backwards so assign min_price as we iterate and then operate
+            min_price = Math.min(min_price, prices[i]);
+            profit[i] = Math.max(profit[i - 1], profit[i] + prices[i] - min_price);
+        }
+
+        return profit[prices.length - 1];
+    }
+
+
+    /**
+     * Given an integer n, find the closest integer (not including itself), which is a palindrome.
+     * <p>
+     * The 'closest' is defined as absolute difference minimized between two integers.
+     */
+    public static int findClosetPalindrome(int n) {
+
+        String nStr = Integer.toString(n);
+        int idx = 0;
+        boolean isOdd = nStr.length() % 2 != 0;
+        StringBuilder sb = new StringBuilder();
+        while (idx < nStr.length() / 2) {
+            sb.append(nStr.charAt(idx++));
+        }
+        String prefixStr = sb.reverse().toString();
+        sb.reverse();
+        if (isOdd) {
+            sb.append(nStr.charAt(idx));
+        }
+        sb.append(prefixStr);
+        return Integer.parseInt(sb.toString());
+
+
+//        String nStr = Integer.toString(n);
+//        //O(n)
+//        List<Character> closetPalindromeList = new ArrayList<>(nStr.length());
+//        boolean isOdd = nStr.length() % 2 != 0;
+//        for(int i = 0; i<nStr.length(); i++) closetPalindromeList.add('~');
+//        int idx = 0;
+//        //O(n)
+//        while(idx != nStr.length()/2){
+//            closetPalindromeList.add(idx, nStr.charAt(idx));
+//            closetPalindromeList.add(nStr.length() - 1 - idx, nStr.charAt(idx));
+//            idx++;
+//        }
+//
+//        if (isOdd){
+//            closetPalindromeList.add(idx, nStr.charAt((nStr.length()/2)));
+//        }
+//
+//        List<Character> finalArray = new ArrayList<>();
+//        for (Character c : closetPalindromeList){
+//            if (c != '~') finalArray.add(c);
+//        }
+//        char[] digitsArray = new char[finalArray.size()];
+//        for (int i = 0; i<finalArray.size(); i++){
+//            digitsArray[i] = finalArray.get(i);
+//        }
+//        String s = new String(digitsArray);
+//        return Integer.parseInt(s);
+//
+
+//        int closestPalindrome = n;
+//
+//        for(int i = n+1; i<Integer.MAX_VALUE; i++){
+//            if(isPalindrome(i)) {
+//                closestPalindrome = i;
+//                break;
+//            }
+//        }
+//
+//        int difference = Math.abs(closestPalindrome - n);
+//
+//        for (int i = n+1; i>Integer.MIN_VALUE; i--){
+//            if (isPalindrome(i)){
+//                int differenceLower = Math.abs(i - n);
+//                if (differenceLower < difference){
+//                    closestPalindrome = i;
+//                }
+//                break;
+//            }
+//        }
+//
+//        return closestPalindrome;
+    }
+
+    private static boolean isPalindrome(int num) {
+        String numStr = String.valueOf(num);
+        for (int i = 0; i < numStr.length() / 2; i++) {
+            if (numStr.charAt(i) != numStr.charAt(numStr.length() - 1 - i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
