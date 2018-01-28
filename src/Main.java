@@ -9,7 +9,7 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println(findClosetPalindrome(3130));
+        System.out.println(medianOfTwoSortedArrays(new int[]{1, 2, 3, 4}, new int[]{5, 6, 7, 8, 9, 10}));
     }
 
 
@@ -2469,6 +2469,85 @@ public class Main {
             }
         }
         return true;
+    }
+
+    /**
+     * Search rotated array
+     */
+    public static int binarySearchRotated(int[] data, int target) {
+        //Instead of rotating the array back to orginal form, we can mathematically do the same via modulo and knowing
+        //how much the array was rotated
+        //rotated idx is the ((normal idx) + (rotated amount)) modulo (length)
+        //data[] = 1,2,3,4,5,6,7
+        //dataRotate[] = 4,5,6,7,1,2,3
+        //normal idx = (end + start) / 2 => (6 + 0)/2 => 3;
+        // data[3] = 4; This is the middle of the unrotated array
+        // dataRotate[3] = 7; this is the end of the unsorted array and this is an abstract data point but...
+        //rotatedIdx = ((normal idx) + (amount rotated)) % (length) = (3 + 4) % 7 = 7 % 7 => 0
+        //This is the same as saying take your idx and subtract the amount rotated but the modulo operator help with if
+        // the subtraction or addition goes below 0 or over the length
+        //If you want the idx 20, you really want 20 % data.length => 20 % 7 => 6; data[20] => data[6]
+        //dataRotated[rotatedIdx] => dataRotated[0] = 4 = data[normalIdx];
+        //We then continue our binary search operation as normal using rotatedIdx but we modify the normalIdx
+
+        //1) Find the smallest idx to find out how much the array was rotated
+        int start = 0, end = data.length - 1;
+        while (start < end) {
+            int mid = (end + start) / 2;
+            if (data[mid] > data[end]) {
+                start = mid + 1;
+            } else {
+                end = mid;
+            }
+        }
+
+        int rotatedAmount = start;
+        start = 0;
+        end = data.length - 1;
+        while (start <= end) {
+            int mid = (start + end) / 2;
+            int realMid = (mid + rotatedAmount) % data.length;
+            if (data[realMid] == target) return realMid;
+            if (data[realMid] < target) {
+                start = mid + 1;
+            } else {
+                end = mid - 1;
+            }
+        }
+
+        return -1;
+    }
+
+    /**
+     * Find the median of two sorted arrays
+     */
+    public static int medianOfTwoSortedArrays(int[] dataA, int[] dataB) {
+        //O(n) space and time
+        int[] dataCombined = combineSortedArrays(dataA, dataB);
+        if (dataCombined.length % 2 != 0) {
+            return dataCombined[dataCombined.length / 2];
+        } else {
+            return (dataCombined[dataCombined.length / 2] + dataCombined[(dataCombined.length / 2) - 1]) / 2;
+        }
+    }
+
+    private static int[] combineSortedArrays(int[] dataA, int[] dataB) {
+        int[] temp = new int[dataA.length + dataB.length];
+        int i = 0, j = 0, k = 0;
+        while (i < dataA.length && j < dataB.length) {
+            if (dataA[i] < dataB[j]) {
+                temp[k++] = dataA[i++];
+            } else {
+                temp[k++] = dataB[j++];
+            }
+        }
+        while (i < dataA.length) {
+            temp[k++] = dataA[i++];
+        }
+        while (j < dataB.length) {
+            temp[k++] = dataB[j++];
+        }
+        return temp;
     }
 
 }
