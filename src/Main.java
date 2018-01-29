@@ -9,7 +9,7 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println(medianOfTwoSortedArrays(new int[]{1, 2, 3, 4}, new int[]{5, 6, 7, 8, 9, 10}));
+        System.out.println(findKthSmallestDistanceBetweenPairs(new int[]{1, 3, 1}, 1));
     }
 
 
@@ -2548,6 +2548,183 @@ public class Main {
             temp[k++] = dataB[j++];
         }
         return temp;
+    }
+
+    /**
+     * Find smallest negative number idx in sorted array closet to the positive number
+     * ex) -4,-3,-2,-1,-1,-1,0,1,2,3,4
+     * return 5 because -1 @ idx 5 is only 1 away from 0
+     */
+    private static int findSmallestNegativeNumberHighestIdx(int[] data) {
+        int start = 0;
+        int end = data.length - 1;
+        int ansIdx = -1;
+        while (start <= end) {
+            int mid = (start + end) / 2;
+            if (data[mid] < 0) {
+                ansIdx = mid;
+                start = mid + 1;
+            } else {
+                end = mid - 1;
+            }
+        }
+        return ansIdx;
+    }
+
+    /**
+     * Find smallest negative number idx in sorted array closet to the positive number
+     * ex) -4,-3,-2,-1,-1,-1,0,1,2,3,4
+     * return 5 because -1 @ idx 3 is only 1 away from 0
+     */
+    private static int findSmallestNegativeNumberLowestIdx(int[] data) {
+        //Find number closet to 0
+        int start = 0;
+        int end = data.length - 1;
+        int ansIdx = -1;
+        while (start <= end) {
+            int mid = (start + end) / 2;
+            if (data[mid] < 0) {
+                ansIdx = mid;
+                start = mid + 1;
+            } else {
+                end = mid - 1;
+            }
+        }
+
+        //Find earliest occurance of data[ansIdx]
+        int target = data[ansIdx];
+        start = 0;
+        end = data.length - 1;
+        ansIdx = -1;
+
+        while (start <= end) {
+            int mid = (start + end) / 2;
+            if (data[mid] >= target) {
+                end = mid - 1;
+                ansIdx = mid;
+            } else {
+                start = mid + 1;
+            }
+        }
+
+        return ansIdx;
+    }
+
+    /**
+     * Given a string containing just the characters '(' and ')', find the length of the longest valid (well-formed) parentheses substring.
+     * <p>
+     * For "(()", the longest valid parentheses substring is "()", which has length = 2.
+     * <p>
+     * Another example is ")()())", where the longest valid parentheses substring is "()()", which has length = 4.
+     */
+    public static int findLongestValidParenthesis(String expr) {
+        /*
+        Stack<Character> stack = new Stack<>();
+        int length = 0;
+        int maxLength = -1;
+        int i = expr.indexOf('(');
+        if (i == -1) return -1;
+        for (; i<expr.length(); i++){
+            Character charAtIdx = expr.charAt(i);
+            if (charAtIdx.equals(')')){
+                if (stack.empty()){
+                    maxLength = Math.max(maxLength, length);
+                    length = 0;
+                }
+                else if (stack.peek() == '('){
+                    stack.pop();
+                    length++;
+                    length++;
+                    maxLength = Math.max(maxLength, length);
+                }
+            }
+            if (charAtIdx.equals('(')){
+                stack.push('(');
+            }
+        }
+
+        while(!stack.isEmpty()){
+            maxLength--;
+            maxLength--;
+            stack.pop();
+        }
+        return maxLength;
+        */
+        int left = 0, right = 0, maxLength = 0;
+        //left scan
+        for (int i = 0; i < expr.length(); i++) {
+            if (expr.charAt(i) == '(') {
+                left++;
+            } else if (expr.charAt(i) == ')') right++;
+            if (left == right) {
+                maxLength = Math.max(maxLength, 2 * right);
+            } else if (right > left) { //if there are too many closing parenthesis then reset the algo for a new string
+                left = right = 0; //reset all calc
+            }
+        }
+        //right scan
+        left = right = 0;
+        for (int i = expr.length() - 1; i >= 0; i--) {
+            if (expr.charAt(i) == '(') {
+                left++;
+            } else if (expr.charAt(i) == ')') right++;
+            if (left == right) {
+                maxLength = Math.max(maxLength, 2 * left);
+            } else if (left > right) {
+                left = right = 0;
+            }
+        }
+        return maxLength;
+    }
+
+    /**
+     * Given an integer array, return the k-th smallest distance among all the pairs. The distance of a pair (A, B)
+     * is defined as the absolute difference between A and B.
+     */
+    public static Integer findKthSmallestDistanceBetweenPairs(int[] data, int k) {
+//        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
+//        Set<Integer> set = new HashSet<>();
+//        for (int i = 0; i<data.length; i++){
+//            for (int j = 0; j<data.length; j++){
+//                    set.add(Math.abs(data[i] - data[j]));
+//            }
+//        }
+//        priorityQueue.addAll(set);
+//        while(k-- > 1){
+//            priorityQueue.poll();
+//        }
+//        return priorityQueue.poll();
+        Arrays.sort(data);
+
+        //find low
+        int low = data[1] - data[0];
+        for (int i = 1; i < data.length - 1; i++) {
+            low = Math.min(low, data[i + 1] - data[i]);
+        }
+
+        //find high
+        int high = data[data.length - 1] - data[0]; //max diff
+
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (countPairs(data, mid) < k) low = mid + 1;
+            else {
+                high = mid;
+            }
+        }
+
+        return low;
+    }
+
+    private static int countPairs(int[] data, int mid) {
+        int n = data.length;
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            int j = i;
+            while (j < n && data[j] - data[i] < mid) j++;
+            res = res + j - i - 1; // res = res + number of pairs whose diff is < mid minus the starting idx and one for length
+        }
+        return res;
     }
 
 }
