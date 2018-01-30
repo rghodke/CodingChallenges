@@ -9,7 +9,7 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println(findKthSmallestDistanceBetweenPairs(new int[]{1, 3, 1}, 1));
+        System.out.println(generateShortestPalindrome("aabba"));
     }
 
 
@@ -2726,5 +2726,66 @@ public class Main {
         }
         return res;
     }
+
+    /**
+     * Boyer-moore algo
+     */
+    public static int indexOfCustom(String string, String pattern) {
+        int ansIdx = -1;
+        Map<Character, Integer> patternMapping = new HashMap<>();
+        //for every letter in alphabet default skip is length of pattern
+        for (int i = 0; i < 26; i++) {
+            patternMapping.put((char) ('a' + i), pattern.length());
+        }
+        //for every letter in pattern ,put how many letters you can shift
+        for (int i = 0; i < pattern.length() - 1; i++) {
+            patternMapping.put(pattern.charAt(i), pattern.length() - 1 - i);
+        }
+        int i = 0;
+        int skip = 1;
+        for (i = 0; i <= string.length() - pattern.length(); i += skip) {
+            skip = 1;
+            for (int j = pattern.length() - 1; j >= 0; j--) {
+                if (pattern.charAt(j) == string.charAt(i + j)) {
+                    if (j == 0) {
+                        ansIdx = i;
+                    }
+                } else if (pattern.charAt(j) != string.charAt(i + j)) {
+                    skip = patternMapping.get(string.charAt(i));
+                    break;
+                }
+            }
+            System.out.println("i " + i + " skip " + skip);
+        }
+        return ansIdx;
+    }
+
+    /**
+     * Given a string S, you are allowed to convert it to a palindrome by adding characters in front of it.
+     * Find and return the shortest palindrome you can find by performing this transformation.
+     */
+    public static String generateShortestPalindrome(String s) {
+        //O(n^2)
+        if (isStringPalindrome(s)) return s;
+        StringBuilder sb = new StringBuilder(s);
+        int iter = s.length() - 1;
+        while (!isStringPalindrome(sb.toString())) {//O(n)
+            System.out.println(sb.toString());
+            sb.insert(0, s.charAt(iter--));//O(n)
+        }
+        return sb.toString();
+    }
+
+    private static boolean isStringPalindrome(String s) {
+        int i = 0;
+        int j = s.length() - 1;
+        while (i < j) {
+            if (s.charAt(i) != s.charAt(j)) return false;
+            i++;
+            j--;
+        }
+        return true;
+    }
+
 
 }
