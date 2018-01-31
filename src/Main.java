@@ -9,7 +9,23 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println(generateShortestPalindrome("aabba"));
+        QueueWithArray queueWithArray = new QueueWithArray();
+        queueWithArray.enqueue(1);
+        queueWithArray.enqueue(2);
+        queueWithArray.enqueue(3);
+        queueWithArray.enqueue(4);
+        queueWithArray.enqueue(5);
+        queueWithArray.enqueue(6);
+        queueWithArray.enqueue(7);
+        queueWithArray.enqueue(8);
+        queueWithArray.enqueue(9);
+        queueWithArray.enqueue(10);
+        System.out.println(queueWithArray.dequeue());
+        System.out.println(queueWithArray.dequeue());
+        queueWithArray.enqueue(11);
+        queueWithArray.enqueue(12);
+
+
     }
 
 
@@ -2787,5 +2803,186 @@ public class Main {
         return true;
     }
 
+    private static int[] mergeSort(int[] data, int l, int r) {
+        if (l < r) {
+            int mid = l + (r - l) / 2;
+            mergeSort(data, l, mid);
+            mergeSort(data, mid + 1, r);
+            mergeSortHelper(data, l, mid, r);
+        }
+        return data;
+    }
+
+    private static void mergeSortHelper(int[] data, int l, int m, int r) {
+        //sizes of the two arrays
+        int n1 = m - l + 1; //+1 for the middle
+        int n2 = r - m;
+
+        //The arrays of the two halfs
+        int[] n1Data = new int[n1];
+        int[] n2Data = new int[n2];
+
+        //Iterators of the array
+        int i = 0, j = 0, k = l;
+
+        //Populate the arrays
+        for (i = 0; i < n1; i++) {
+            n1Data[i] = data[l + i]; //covers mid
+        }
+        for (j = 0; j < n2; j++) {
+            n2Data[j] = data[m + 1 + j]; //+1 for mid offset
+        }
+
+        //reset the iterators
+        i = 0;
+        j = 0;
+
+        //populate the array
+        while (i < n1 && j < n2) {
+            if (n1Data[i] < n2Data[j]) {
+                data[k++] = n1Data[i++];
+            } else {
+                data[k++] = n2Data[j++];
+            }
+        }
+
+        //copy over the rest of the remainder
+        while (i < n1) {
+            data[k++] = n1Data[i++];
+        }
+
+        while (j < n2) {
+            data[k++] = n2Data[j++];
+        }
+    }
+
+    private static int[] quickSort(int[] data, int low, int high) {
+
+        if (low < high) {
+            int pivot = quickSortHelper(data, low, high);
+            quickSort(data, low, pivot - 1);
+            quickSort(data, pivot + 1, high);
+        }
+        return data;
+    }
+
+    private static int quickSortHelper(int[] data, int low, int high) {
+        int pivot = data[high];
+        int idxPrior = low - 1;
+        for (int i = low; i < high; i++) {
+            if (data[i] <= pivot) {
+                idxPrior++;
+                arraySwap(data, i, idxPrior);
+            }
+        }
+        arraySwap(data, idxPrior + 1, high);
+        return idxPrior + 1;
+    }
+
+    private static void arraySwap(int[] data, int i, int idxPrior) {
+        int temp = data[i];
+        data[i] = data[idxPrior];
+        data[idxPrior] = temp;
+    }
+
+    /**
+     * Generate all possible mnemonic for a phone numbers
+     * ex) 222-222-2222 -> aaa-aaa-aaaa, aaa-aaa-aaab, aaa-aaa-aaac, ..., baa-aaa-aaaa...,caa-aaa-aaaa
+     */
+    public static List<String> generateMnemonics(String number) {
+        String[] mneonics = new String[]{"0", "1", "ABC", "DEF", "GHI", "JKL", "MNO", "PQRS", "TUV", "WXYZ"};
+        List<String> set = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        generateMnemonicsHelper(number, 0, sb, set, mneonics);
+        return set;
+    }
+
+    public static void generateMnemonicsHelper(String number, int numIdx, StringBuilder sb, List<String> set, String[] mneonics) {
+        if (sb.toString().length() > number.length()) {
+            return;
+        }
+        if (sb.toString().length() == number.length()) {
+            set.add(sb.toString());
+            return;
+        }
+
+        for (int i = numIdx; i < number.length(); i++) {
+            int charAtI = (number.charAt(i)) - '0';
+            for (int j = 0; j < mneonics[charAtI].length(); j++) {
+                char selectedChar = mneonics[charAtI].charAt(j);
+                sb.append(selectedChar);
+                generateMnemonicsHelper(number, i + 1, sb, set, mneonics);
+                sb.deleteCharAt(sb.length() - 1);
+            }
+        }
+    }
+
+    /**
+     * Construct a stack via an array
+     */
+    static class Stack {
+        int size;
+        int pushIdx;
+        int popIdx;
+        int[] data;
+
+        public Stack() {
+            size = 3;
+            pushIdx = 0;
+            popIdx = pushIdx;
+            data = new int[size];
+        }
+
+        public boolean push(int x) {
+            if (pushIdx == data.length - 1) {
+                doubleDataArray();
+            }
+            data[pushIdx++] = x;
+            popIdx = pushIdx;
+            return true;
+        }
+
+        public int pop() {
+            if (popIdx == 0) return -1;
+            int dataPopped = data[popIdx-- - 1];
+            return dataPopped;
+        }
+
+        public void doubleDataArray() {
+            size = size * 2;
+            int[] newData = new int[size];
+            for (int i = 0; i < data.length; i++) {
+                newData[i] = data[i];
+            }
+            data = newData;
+        }
+    }
+
+    static class QueueWithArray {
+        int[] data;
+        int size;
+        int enqIdx;
+        int deqIdx;
+
+        public QueueWithArray() {
+            size = 10;
+            data = new int[size];
+            enqIdx = 0;
+            deqIdx = 0;
+        }
+
+        public boolean enqueue(int insertThis) {
+            if (enqIdx > data.length) return false;
+            data[enqIdx] = insertThis;
+            enqIdx = (enqIdx + 1) % data.length;
+            return true;
+        }
+
+        public int dequeue() {
+            int deqItem = data[deqIdx];
+            deqIdx = (deqIdx + 1) % data.length;
+            return deqItem;
+        }
+    }
 
 }
