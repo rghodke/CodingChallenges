@@ -9,6 +9,11 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
+        int[] data = new int[]{1,3,5,2,0};
+        bubbleSort(data);
+        for (int d : data){
+            System.out.println(d);
+        }
     }
 
 
@@ -2992,5 +2997,17 @@ public class Main {
         return ((dp[k] + M - (k > 0 ? dp[k - 1] : 0)) % M);
     }
 
+    public static int[] bubbleSort(int[] data){
+        for (int i = 0; i<data.length; i++){
+            for (int j = 0; j<data.length - i - 1; j++){
+                if (data[j + 1] < data[j]){
+                    int temp = data[j];
+                    data[j] = data[j+1];
+                    data[j+1] = temp;
+                }
+            }
+        }
+        return data;
+    }
 
 }
