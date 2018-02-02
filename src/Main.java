@@ -9,23 +9,6 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        QueueWithArray queueWithArray = new QueueWithArray();
-        queueWithArray.enqueue(1);
-        queueWithArray.enqueue(2);
-        queueWithArray.enqueue(3);
-        queueWithArray.enqueue(4);
-        queueWithArray.enqueue(5);
-        queueWithArray.enqueue(6);
-        queueWithArray.enqueue(7);
-        queueWithArray.enqueue(8);
-        queueWithArray.enqueue(9);
-        queueWithArray.enqueue(10);
-        System.out.println(queueWithArray.dequeue());
-        System.out.println(queueWithArray.dequeue());
-        queueWithArray.enqueue(11);
-        queueWithArray.enqueue(12);
-
-
     }
 
 
@@ -2984,5 +2967,30 @@ public class Main {
             return deqItem;
         }
     }
+
+    /**
+     * Given two integers n and k, find how many different arrays consist of numbers from 1 to n such that there are
+     * exactly k inverse pairs.
+     * <p>
+     * We define an inverse pair as following: For ith and jth element in the array, if i < j and a[i] > a[j] then
+     * it's an inverse pair; Otherwise, it's not.
+     * <p>
+     * Since the answer may be very large, the answer should be modulo 109 + 7.
+     */
+    public static int kInversePairs(int n, int k) {
+        int[] dp = new int[k + 1];
+        int M = Integer.parseInt(Double.toString(Math.pow(10, 9))) + 7;
+        for (int i = 1; i <= n; i++) {
+            int[] temp = new int[k + 1];
+            temp[0] = 1;
+            for (int j = 1; j <= k; j++) {
+                int val = (dp[j] + M - ((j - i) >= 0 ? dp[j - i] : 0)) % M;
+                temp[j] = (temp[j - 1] + val) % M;
+            }
+            dp = temp;
+        }
+        return ((dp[k] + M - (k > 0 ? dp[k - 1] : 0)) % M);
+    }
+
 
 }
