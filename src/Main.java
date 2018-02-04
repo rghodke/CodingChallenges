@@ -9,6 +9,11 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
+        int[] data = new int[]{-3,1,-5,-2,-3,-1,2,4,-8,1};
+        int[] ans = findKMax(data, 2);
+        for (int x : ans){
+            System.out.println(x);
+        }
     }
 
 
@@ -3084,5 +3089,43 @@ public class Main {
         }
     }
 
+    /**
+     * Given an array nums, there is a sliding window of size k which is moving from the very left of the array to the
+     * very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.
+     */
+    private static int[] findKMax(int[] data, int k){
+//        List<Integer> ansList = new ArrayList<>();
+//        int left;
+//        int right;
+//        for (left = 0, right = left + k - 1; right < data.length; left++, right++){
+//            ansList.add(findMax(data, left, right));
+//        }
+//        return ansList;
+        int n = data.length;
+        if (n == 0) {
+            return data;
+        }
+        int[] result = new int[n - k + 1];
+        LinkedList<Integer> dq = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (!dq.isEmpty() && dq.peek() < i - k + 1) {
+                dq.poll();
+            }
+            while (!dq.isEmpty() && data[i] >= data[dq.peekLast()]) {
+                dq.pollLast();
+            }
+            dq.offer(i);
+            if (i - k + 1 >= 0) {
+                result[i - k + 1] = data[dq.peek()];
+            }
+        }
+        return result;
+    }
+
+    private static int findMax(int[] data, int left, int right) {
+        int maxVal = data[left];
+        while (left <= right) maxVal = Math.max(data[left++], maxVal);
+        return maxVal;
+    }
 
 }
