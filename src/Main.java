@@ -9,11 +9,6 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        int[] data = new int[]{1,3,5,2,0};
-        bubbleSort(data);
-        for (int d : data){
-            System.out.println(d);
-        }
     }
 
 
@@ -2997,17 +2992,97 @@ public class Main {
         return ((dp[k] + M - (k > 0 ? dp[k - 1] : 0)) % M);
     }
 
-    public static int[] bubbleSort(int[] data){
-        for (int i = 0; i<data.length; i++){
-            for (int j = 0; j<data.length - i - 1; j++){
-                if (data[j + 1] < data[j]){
+    public static int[] bubbleSort(int[] data) {
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data.length - i - 1; j++) {
+                if (data[j + 1] < data[j]) {
                     int temp = data[j];
-                    data[j] = data[j+1];
-                    data[j+1] = temp;
+                    data[j] = data[j + 1];
+                    data[j + 1] = temp;
                 }
             }
         }
         return data;
     }
+
+    /**
+     * Given an integer n, count the total number of digit 1 appearing in all non-negative integers less than or equal to n.
+     * <p>
+     * For example:
+     * Given n = 13,
+     * Return 6, because digit 1 occurred in the following numbers: 1, 10, 11, 12, 13.
+     */
+    public static int count1DigitsUptoN(int n) {
+//        int _1count = 0;
+//        for (int i = 0; i<=n; i++){
+//            _1count += countOnes(i);
+//        }
+//        return _1count;
+        int _1count = 0;
+        for (int i = 1; i <= n; i++) {
+            long divider = i * 10;
+            _1count += (n / divider) * i + Math.min(Math.max(n % divider - i + 1, 0L), i);
+        }
+        return _1count;
+    }
+
+    public static int countOnes(int in) {
+        String integerStr = String.valueOf(in);
+        int count = 0;
+        for (int i = 0; i < integerStr.length(); i++) {
+            if (integerStr.charAt(i) == '1') count++;
+        }
+        return count;
+    }
+
+    /**
+     * Given a linked list, reverse the nodes of a linked list k at a time and return its modified list.
+     * <p>
+     * k is a positive integer and is less than or equal to the length of the linked list. If the number of nodes
+     * is not a multiple of k then left-out nodes in the end should remain as it is.
+     * <p>
+     * You may not alter the values in the nodes, only nodes itself may be changed.
+     * <p>
+     * Only constant memory is allowed.
+     */
+    public static Node reverseListInK(Node head, int k) {
+//        int length = findLength(head);
+//        Node headTemp = new Node(-1);
+//        headTemp.next = head;
+//        for (int i = 0; i<length-k; i++){
+//            reverseNodes(head, i, i+k);
+//        }
+//        return headTemp.next;
+
+        int n = 0;
+        for (Node i = head; i != null; n++, i = i.next) ;
+
+        Node dmy = new Node(-1);
+        dmy.next = head;
+        for (Node prev = dmy, tail = head; n >= k; n -= k) {
+            for (int i = 1; i < k; i++) {
+                Node next = tail.next.next;
+                tail.next.next = prev.next;
+                prev.next = tail.next;
+                tail.next = next;
+            }
+
+            prev = tail;
+            tail = tail.next;
+        }
+        return dmy.next;
+
+    }
+
+    private static void reverseNodes(Node current, int i, int k) {
+        Node prev = null;
+        while (i++ < k) {
+            Node next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+    }
+
 
 }
