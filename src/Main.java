@@ -9,11 +9,7 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        int[] data = new int[]{-3,1,-5,-2,-3,-1,2,4,-8,1};
-        int[] ans = findKMax(data, 2);
-        for (int x : ans){
-            System.out.println(x);
-        }
+
     }
 
 
@@ -3093,7 +3089,7 @@ public class Main {
      * Given an array nums, there is a sliding window of size k which is moving from the very left of the array to the
      * very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.
      */
-    private static int[] findKMax(int[] data, int k){
+    private static int[] findKMax(int[] data, int k) {
 //        List<Integer> ansList = new ArrayList<>();
 //        int left;
 //        int right;
@@ -3126,6 +3122,25 @@ public class Main {
         int maxVal = data[left];
         while (left <= right) maxVal = Math.max(data[left++], maxVal);
         return maxVal;
+    }
+
+    /**
+     * Given a sorted array, two integers k and x, find the k closest elements to x in the array. The result should
+     * also be sorted in ascending order. If there is a tie, the smaller elements are always preferred.
+     */
+    public int[] findClosestElements(int[] arr, int k, int x) {
+        Set<Integer> distancebyIdx = new HashSet<>();
+        //find the closet element to k
+        int left = 0;
+        int right = arr.length;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (x - arr[mid] > arr[mid + k] - x)
+                left = mid + 1;
+            else
+                right = mid;
+        }
+        return Arrays.copyOfRange(arr, left, left + k);
     }
 
 }
